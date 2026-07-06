@@ -13,6 +13,6 @@ git remote add origin 저장소주소
 ```
 git add .
 git commit -m "커밋 메시지" 
-git branch -m master main (1회만 사용)
+git branch -m master main #(1회만 사용)
 git push -u origin main
 ```
