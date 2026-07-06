@@ -1,7 +1,7 @@
 package com.example.backend.global.security.error;
 
-import com.example.server.global.ResponseClass;
-import com.example.server.global.security.error.exception.LoginException;
+import com.example.backend.global.ResponseClass;
+import com.example.backend.global.security.error.Exception.LoginException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
