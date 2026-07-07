@@ -1,1 +1,17 @@
 /* css 작성 파일 */
+*{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    box-sizing: border-box;
+}
+html,body,#root{
+    height: 100%;
+    width: 100%;
+}
+ul{
+    list-style: none;
+}
+button,a,input{
+    cursor: pointer;
+}
