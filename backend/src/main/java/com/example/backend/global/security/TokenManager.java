@@ -1,9 +1,14 @@
 package com.example.backend.global.security;
 
+import com.example.backend.global.security.error.Exception.TokenException;
+import com.example.backend.global.security.refreshToken.RefreshToken;
+import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +23,23 @@ import java.util.UUID;
 
 
 @Component
+@RequiredArgsConstructor
 public class TokenManager {
     @Value("${jwt.secret-key}")
     private String SECRET_KEY_STRING; //보안 키
 
     private SecretKey SECRET_KEY;
 
-    final static private Long VALID_TIME= 30 * 60 * 1000L; //토큰 허용 시간(30분)
+    final private RefreshTokenRepository refreshTokenRepository;
+
+    final static private Long VALID_TIME= 5 * 60 * 1000L; //토큰 허용 시간(5분)
+    final static private Long REFRESH_VALID_TIME= 14 * 24 * 60 * 60 * 1000L;
 
     @PostConstruct //Value 후 자동 실행
     public void init() {
         SECRET_KEY = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8)); //암호화
     }
-    public String createToken(String id, Map<String, Object> tokenContent){
+    public String createAcceptToken(String id, Map<String, Object> tokenContent){
         Date now = new Date();
         Date expirationTime = new Date(now.getTime()+VALID_TIME);
         if (id==null || id.isEmpty()){
@@ -44,6 +53,16 @@ public class TokenManager {
                 .signWith(SECRET_KEY)
                 .compact();
 
+    }
+    public String createRefreshToken(String id){
+        Date now = new Date();
+        Date expirationTime = new Date(now.getTime()+REFRESH_VALID_TIME);
+        return Jwts.builder()
+                .subject(id)
+                .issuedAt(now)
+                .expiration(expirationTime)
+                .signWith(SECRET_KEY)
+                .compact();
     }
     public Claims getToken(String token){
         try {
@@ -61,9 +80,11 @@ public class TokenManager {
                     .parseSignedClaims(token) //서명 및 만료기간 인증. 데이터 복호화
                     .getPayload(); //토큰에서 페이로드만 반환
 
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e){
+            throw new TokenException("토큰이 만료되었습니다.", true);
+        }catch (Exception e) {
             // 토큰 만료, 서명 불일치, 올바르지 않은 구조 등 모든 검증 실패 시 null 반환
-            throw new IllegalArgumentException("토큰에서 에러 발생");
+            throw new TokenException("유효 토큰이 아닙니다.");
         }
     }
 }
