@@ -3,6 +3,7 @@
     --border-radius-size: 8px;
     --menubar-size:100px;
     --point-color1:#666;
+    --hr-size:4px;
 }
 *{
     margin: 0px;
@@ -27,7 +28,7 @@ ul{
     list-style: none;
 }
 hr{
-    height: 5px;
+    height: var(--hr-size);
     border-radius: 9999px;
     background-color: var(--point-color1);
 }
