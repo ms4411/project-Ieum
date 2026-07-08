@@ -14,7 +14,7 @@ function KakaoMap({ setMapObject }) {
     }
   }, [setMapObject]);
 
-  return <div ref={container} style={{ width: '100%', height: '480px' }} />;
+  return <div ref={container} style={{ width: '100%', height: 'calc(100% - var(--menubar-size))' }} />;
 }
 
 export default KakaoMap

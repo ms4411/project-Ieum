@@ -1,4 +1,8 @@
 /* css 작성 파일 */
+:root{
+    --menubar-size:100px;
+    --shadow-color:#444;
+}
 *{
     margin: 0px;
     padding: 0px;
@@ -9,9 +13,15 @@ html,body,#root{
     height: 100%;
     width: 100%;
 }
+#root{
+    position: relative;
+}
 ul{
     list-style: none;
 }
 button,a,input{
     cursor: pointer;
+}
+input{
+    padding: 0 8px;
 }

@@ -13,24 +13,38 @@ function Menubar(props){
         // 결과물: "2026-07-08T00:51:28.000Z" -> 여기서 앞의 16자리(분까지)만 자릅니다.
         return kstDate.toISOString().slice(0, 16); 
     };
-    const [selectedDateTime, setselectedDateTime] = useState(getKoreaCurrentDateTime);
 
-    const handleDateTimeChange = (e) => {
-        setselectedDateTime(e.target.value); // YYYY-MM-DDTHH:mm 형식으로 저장됨 (예: 2026-07-07T20:30)
+    const [selectedDate, setselectedDate] = useState(()=>getKoreaCurrentDateTime().slice(0,10));
+    const [selectedTime, setselectedTime] = useState(()=>getKoreaCurrentDateTime().slice(11,16));
+
+    const handleDateChange = (e) => {
+        setselectedDate(e.target.value); // YYYY-MM-DDTHH:mm 형식으로 저장됨 (예: 2026-07-07T20:30)
+    };
+    const handleTimeChange = (e) => {
+        setselectedTime(e.target.value); // YYYY-MM-DDTHH:mm 형식으로 저장됨 (예: 2026-07-07T20:30)
     };
     return(
         <>
             <div id="menubar">
-                <input 
-                    type="datetime-local" 
-                    value={selectedDateTime} 
-                    onChange={handleDateTimeChange} 
-                />
-                <ul id="btn-list">
+                <input type="text" placeholder="검색창"></input>
+                <div id="datetime-input">
+                    <input 
+                    type="date" 
+                    value={selectedDate} 
+                    onChange={handleDateChange} 
+                    />
+                    <input 
+                    type="time"
+                    value={selectedTime}
+                    onChange={handleTimeChange}
+                    />
+                </div>
+                
+                <div id="btn-list">
                     <Button name="내 위치" fun={props.setPosFun}/>
                     <Button name="로그인" fun={testfun}/>
                     <Button name="예시입니다" fun={testfun}/>
-                </ul>
+                </div>
             </div>
         </>
 
