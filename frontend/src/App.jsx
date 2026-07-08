@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Menubar from './component/Menubar.jsx'
 import KakaoMap from './component/KakaoMap.jsx'
+import BottomSheet from './component/BottomSheet.jsx';
 
 function App() {
   const [mapObject,setMapObject] = useState(null);
@@ -45,6 +46,7 @@ function App() {
   <>
     <Menubar setPosFun={handleMoveToCurrentLocation}/>
     <KakaoMap setMapObject={setMapObject}/>
+    <BottomSheet/>
   </>
   )
 }
