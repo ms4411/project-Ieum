@@ -1,0 +1,15 @@
+@import url(../index.css);
+#bottom-menu{
+    /* 정렬 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 8px;
+    /* 위치 지정 */
+    position: absolute;
+    right: 0;
+    bottom: var(--first-bottom-sheet-height);
+    z-index: 999;
+
+    background-color: transparent;
+}

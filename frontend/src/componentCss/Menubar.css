@@ -1,6 +1,6 @@
 @import url(../index.css);
 #menubar{
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
     width: 100vw;
     height: var(--menubar-size);
     padding: 16px;

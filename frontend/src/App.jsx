@@ -3,6 +3,7 @@ import './App.css'
 import Menubar from './component/Menubar.jsx'
 import KakaoMap from './component/KakaoMap.jsx'
 import BottomSheet from './component/BottomSheet.jsx';
+import BottomMenu from './component/BottomMenu.jsx';
 
 function App() {
   const [mapObject,setMapObject] = useState(null);
@@ -50,6 +51,7 @@ function App() {
   <>
     <Menubar setPosFun={handleMoveToCurrentLocation} addGroups={addGroups}/>
     <KakaoMap setMapObject={setMapObject}/>
+    <BottomMenu />
     <BottomSheet groups={groups} setGroups={setGroups}/>
   </>
   )
