@@ -23,6 +23,7 @@ function Menubar(props){
     const handleTimeChange = (e) => {
         setselectedTime(e.target.value); // YYYY-MM-DDTHH:mm 형식으로 저장됨 (예: 2026-07-07T20:30)
     };
+    const testData={name:'예시',imgUrl:'/public/makerImg.png', content:'어ㅓㅓㅓㅓㅓ'}
     return(
         <>
             <div id="menubar">
@@ -43,7 +44,7 @@ function Menubar(props){
                 <div id="btn-list">
                     <Button name="내 위치" fun={props.setPosFun}/>
                     <Button name="로그인" fun={testfun}/>
-                    <Button name="예시입니다" fun={testfun}/>
+                    <Button name="예시입니다" fun={()=>props.addGroups(testData)}/>
                 </div>
             </div>
         </>

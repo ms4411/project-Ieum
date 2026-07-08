@@ -7,6 +7,7 @@ import BottomSheet from './component/BottomSheet.jsx';
 function App() {
   const [mapObject,setMapObject] = useState(null);
   const [currentMarker, setCurrentMarker] = useState(null);
+  const [groups, setGroups]=useState([]);
 
   // 버튼을 눌러서 언제든 내 위치로 다시 이동하고 싶을 때 쓰는 함수
   const handleMoveToCurrentLocation = () => {
@@ -42,11 +43,14 @@ function App() {
     }
   };
 
+  const addGroups = (group)=>{
+    setGroups([...groups, group])
+  }
   return (
   <>
-    <Menubar setPosFun={handleMoveToCurrentLocation}/>
+    <Menubar setPosFun={handleMoveToCurrentLocation} addGroups={addGroups}/>
     <KakaoMap setMapObject={setMapObject}/>
-    <BottomSheet/>
+    <BottomSheet groups={groups} setGroups={setGroups}/>
   </>
   )
 }

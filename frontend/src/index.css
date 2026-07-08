@@ -4,6 +4,7 @@
     --menubar-size:100px;
     --point-color1:#666;
     --hr-size:4px;
+    --first-bottom-sheet-height:50px;
 }
 *{
     margin: 0px;

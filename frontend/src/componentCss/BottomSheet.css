@@ -1,7 +1,6 @@
 @import url(../index.css);
 #bottom-sheet{
     --padding-top-size:16px;
-    --first-bottom-sheet-height:50px;
 }
 #bottom-sheet{
     padding-top: var(--padding-top-size);
@@ -33,4 +32,21 @@ hr{
     display: grid;
     overflow-y: scroll;
     width: 100%;
+}
+#group-list::-webkit-scrollbar{
+    display: none;
+}
+
+#group-list>li{
+    border-bottom: 1px solid var(--point-color1);
+    display:grid;
+    grid-template-columns:1fr 3fr;
+    gap:8px;
+    padding:8px;
+}
+
+#group-list img{
+    box-shadow: inset 0px 0px 3px 1px var(--point-color1);
+    border-radius: var(--border-radius-size);
+    padding:8px;
 }
