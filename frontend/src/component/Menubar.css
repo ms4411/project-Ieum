@@ -28,6 +28,7 @@
 #datetime-input{
     display: grid;
     grid-template-columns: 1fr 1fr;
+    border-radius: var(--border-radius-size);
 }
 #datetime-input>input{
     text-align: center;
@@ -35,7 +36,14 @@
 }
 #datetime-input>input:not(:last-child){
     border-right: 1px solid;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
+#datetime-input>input:not(:first-child){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 
 input[type=text]{
     padding-top: 8px;

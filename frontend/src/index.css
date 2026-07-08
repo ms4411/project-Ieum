@@ -1,5 +1,6 @@
 /* css 작성 파일 */
 :root{
+    --border-radius-size: 8px;
     --menubar-size:100px;
     --shadow-color:#444;
 }
@@ -19,8 +20,9 @@ html,body,#root{
 ul{
     list-style: none;
 }
-button,a,input{
+button,input{
     cursor: pointer;
+    border-radius: var(--border-radius-size);
 }
 input{
     padding: 0 8px;
