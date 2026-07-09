@@ -68,15 +68,12 @@ function App() {
     }
   };
 
-  const addGroups = (group)=>{
-    setGroups([...groups, group])
-  }
   return (
   <>
-    <Menubar setPosFun={handleMoveToCurrentLocation} addGroups={addGroups}/>
     <KakaoMap setMapObject={setMapObject}/>
     <BottomMenu setPosFun={handleMoveToCurrentLocation} createMarker={createMarker}/>
     <BottomSheet groups={groups} setGroups={setGroups}/>
+    <Menubar setPosFun={handleMoveToCurrentLocation}/>
   </>
   )
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Button from "./Button";
 import '../componentCss/Menubar.css'
+import PopupScreen from "./PopupScreen";
 
-function Menubar(props){
-    let testfun=()=>{window.open("https://youtube.com")}
+function Menubar({setPosFun}){
     //현재 한국 시간 받기
     const getKoreaCurrentDateTime = () => {
         // 한국 시간(UTC+9)을 맞추기 위해 시차만큼 밀어줍니다.
@@ -23,7 +23,19 @@ function Menubar(props){
     const handleTimeChange = (e) => {
         setselectedTime(e.target.value); // YYYY-MM-DDTHH:mm 형식으로 저장됨 (예: 2026-07-07T20:30)
     };
-    const testData={name:'예시',imgUrl:'/public/makerImg.png', content:'어ㅓㅓㅓㅓㅓ'}
+    
+    const [isOpen, setIsOpen] = useState(false);
+    const [latLng,setLatLng] = useState({lat:0,lng:0});
+    const createGroup=()=>{
+        // 클릭한 위치의 위도 경도 좌표를 가져옵니다
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;  // 현재 내 위치 위도
+            const lng = position.coords.longitude; // 현재 내 위치 경도
+            setLatLng({lat:lat,lng:lng})
+            setIsOpen(true)
+        });
+    }
+
     return(
         <>
             <div id="menubar">
@@ -42,10 +54,13 @@ function Menubar(props){
                 </div>
                 
                 <div id="btn-list">
-                    <Button name="내 위치" fun={props.setPosFun}/>
-                    <Button name="로그인" fun={testfun}/>
-                    <Button name="예시입니다" fun={()=>props.addGroups(testData)}/>
+                    <Button name="로그인" fun={null}/>
+                    <Button name="내 위치" fun={setPosFun}/>
+                    <Button name="모임 생성" fun={createGroup}/>
                 </div>
+                {isOpen && (
+                    <PopupScreen lat={latLng.lat} lng={latLng.lng} setIsOpen={setIsOpen}/>
+                )}
             </div>
         </>
 
