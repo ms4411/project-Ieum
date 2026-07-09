@@ -12,6 +12,29 @@ function App() {
   const [mapObject, setMapObject] = useState(null);
   const [groups, setGroups]=useState([]);
 
+  const createMarker = (lat, lon, img)=>{
+    const locPosition = new kakao.maps.LatLng(lat, lon);
+    let marker;
+    if(img!=null){
+      const imageSrc = img.src; // 카카오 제공 내 위치 동그라미
+      const imageSize = new kakao.maps.Size(img.size, img.size); // 동그라미 크기
+      const imageOption = { offset: new kakao.maps.Point(img.size/2, img.size/2) }; // 📌 중요: 원형 마커는 중심이 기준점이어야 하므로 반값씩 줍니다!
+      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+      console.log(markerImage)
+        marker = new kakao.maps.Marker({
+        position: locPosition,
+        image: markerImage
+      });
+    }
+    else{
+        marker = new kakao.maps.Marker({
+        position: locPosition
+      });
+    }
+    marker.setMap(mapObject);
+    return marker
+  }
+
   // 버튼을 눌러서 언제든 내 위치로 다시 이동하고 싶을 때 쓰는 함수
   const handleMoveToCurrentLocation = () => {
     console.log(markerRef);
@@ -29,16 +52,8 @@ function App() {
           markerRef.current.setMap(null)
           markerRef.current = null; // 지우고 나서 금고를 깨끗하게 비워줍니다.
         }
-        const imageSrc = '../public/makerImg.png'; // 카카오 제공 내 위치 동그라미
-        const imageSize = new kakao.maps.Size(24, 24); // 동그라미 크기
-        const imageOption = { offset: new kakao.maps.Point(12, 12) }; // 📌 중요: 원형 마커는 중심이 기준점이어야 하므로 반값씩 줍니다!
-
-        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-
-        const marker = new kakao.maps.Marker({
-          position: locPosition,
-          image: markerImage
-        });
+        
+        const marker=createMarker(lat, lon, {src:'../public/makerImg.png', size:24})
 
         // 3. 🚨 생성한 마커를 화면에 보이는 지도 위에 올리기
         marker.setMap(mapObject);
