@@ -23,7 +23,7 @@ function PopupScreen({lat,lng,setIsOpen}){
                 <div id="popup">
                     <h1 style={{textAlign:'center'}}>모임 생성</h1>
                     <form action="" id="group-form">
-                        <input type="text" value={a(lng,lat)} readOnly />
+                        <input type="text" value={a(lng,lat)} />
                         <input required placeholder="제목을 입력해 주세요" />
                         <textarea rows={10} placeholder="내용을 입력해주세요" style={{resize: 'none'}}></textarea>
                         <input required placeholder="최대 사람 수를 입력해 주세요" type="number" />
