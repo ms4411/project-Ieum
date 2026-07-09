@@ -32,4 +32,7 @@ public class Group {
     @NotNull
     Long maxPeople;
 
+    @NonNull
+    @NotNull
+    UUID createUserId;
 }
