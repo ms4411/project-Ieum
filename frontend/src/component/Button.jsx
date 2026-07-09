@@ -1,6 +1,16 @@
-function Button(props){
+function Button({ img, name, fun, svg }){
+    const buttonCss={
+        display:'flex',
+        alginItems:'center',
+        justifyContent:'center'
+    }
+    if (img){
+        return(
+            <button style={buttonCss} onClick={fun}><img src={img}/>{name}</button>
+        )
+    }
     return(
-        <button onClick={props.fun}>{props.name}</button>
+        <button style={buttonCss} onClick={fun}>{name}</button>
     )
 }
 

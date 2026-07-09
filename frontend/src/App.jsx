@@ -51,7 +51,7 @@ function App() {
   <>
     <Menubar setPosFun={handleMoveToCurrentLocation} addGroups={addGroups}/>
     <KakaoMap setMapObject={setMapObject}/>
-    <BottomMenu />
+    <BottomMenu setPosFun={handleMoveToCurrentLocation}/>
     <BottomSheet groups={groups} setGroups={setGroups}/>
   </>
   )
