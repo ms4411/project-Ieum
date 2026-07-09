@@ -1,5 +1,6 @@
 import { useState,useEffect } from "react";
 import './../componentCss/PopupScreen.css'
+import Button from "./Button";
 function PopupScreen({lat,lng,setIsOpen}){
     const [address, setAddress] = useState('');
     // 1. 주소-좌표 변환 객체를 생성합니다
@@ -25,7 +26,7 @@ function PopupScreen({lat,lng,setIsOpen}){
                     <form action="" id="group-form">
                         <input type="text" value={a(lng,lat)} />
                         <input required placeholder="제목을 입력해 주세요" />
-                        <textarea rows={10} placeholder="내용을 입력해주세요" style={{resize: 'none'}}></textarea>
+                        <textarea required rows={10} placeholder="내용을 입력해주세요" style={{resize: 'none'}}></textarea>
                         <input required placeholder="최대 사람 수를 입력해 주세요" type="number" />
                         <button>제출하기</button>
                         <a onClick={()=>setIsOpen(false)}>모임 생성 취소하기</a>

@@ -3,20 +3,26 @@
     --padding-top-size:16px;
 }
 #bottom-sheet{
-    padding-top: var(--padding-top-size);
+    /* 위치 */
     position: absolute;
     bottom: 0;
     left: 0;
+    z-index: 999;
+    /* 크기 */
     width: 100%;
     height: 80%;
+    padding-top: var(--padding-top-size);
+    /* 스타일 */
     background-color: white;
-    z-index: 999;
     border-radius: var(--border-radius-size);
+    box-shadow: 0px 0px 3px 1px var(--point-color1);
+    /* 모양 */
     transform: translateY(calc(100% - var(--first-bottom-sheet-height)));
+    /* 정렬 */
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0px 0px 3px 1px var(--point-color1);
+    
     transition: all 0.5s;
 }
 hr{
