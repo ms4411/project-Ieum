@@ -20,7 +20,7 @@ public class MemberService {
     private final TokenManager tokenManager;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public String memberCreate(String name, String pw){
+    public String createMember(String name, String pw){
         Member member = new Member(name, passwordEncoder.encode(pw));
         memberRepository.save(member);
         return "회원가입 성공";
@@ -38,7 +38,7 @@ public class MemberService {
         return tokenManager.createAcceptToken(memberId, data);
     }
 
-    public List<?> memberGetAll(){
+    public List<?> getAllMember(){
         return memberRepository.findAll();
     }
 }

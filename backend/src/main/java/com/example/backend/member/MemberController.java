@@ -14,10 +14,10 @@ public class MemberController {
     private final ResponseClass responseClass;
 
     @PostMapping()
-    public ResponseEntity<?> memberCreate(@RequestBody UserAcceptDTO memberAcceptDTO){
+    public ResponseEntity<?> createMember(@RequestBody UserAcceptDTO memberAcceptDTO){
         String name=memberAcceptDTO.getName();
         String pw=memberAcceptDTO.getPw();
-        return responseClass.massageReturn(memberService.memberCreate(name, pw));
+        return responseClass.massageReturn(memberService.createMember(name, pw));
     }
 
     @PostMapping("/singUp")
@@ -26,7 +26,7 @@ public class MemberController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> memberGetAll(){
-        return responseClass.listReturn(memberService.memberGetAll());
+    public ResponseEntity<?> getAllMember(){
+        return responseClass.listReturn(memberService.getAllMember());
     }
 }
