@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,5 +36,9 @@ public class MemberService {
         String memberId=member.getId().toString();
         refreshTokenRepository.save(new RefreshToken(memberId, tokenManager.createRefreshToken(memberId)));
         return tokenManager.createAcceptToken(memberId, data);
+    }
+
+    public List<?> memberGetAll(){
+        return memberRepository.findAll();
     }
 }
