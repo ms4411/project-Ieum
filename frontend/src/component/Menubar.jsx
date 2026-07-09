@@ -57,6 +57,10 @@ function Menubar({setPosFun}){
                     <Button name="로그인" fun={null}/>
                     <Button name="내 위치" fun={setPosFun}/>
                     <Button name="모임 생성" fun={createGroup}/>
+                    <Button name="현재 시각" fun={()=>{
+                        setselectedDate(getKoreaCurrentDateTime().slice(0,10))
+                        setselectedTime(getKoreaCurrentDateTime().slice(11,16))
+                    }}/>
                 </div>
                 {isOpen && (
                     <PopupScreen lat={latLng.lat} lng={latLng.lng} setIsOpen={setIsOpen}/>
