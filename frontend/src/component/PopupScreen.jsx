@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import './../componentCss/PopupScreen.css'
-function PopupScreen({lat,lng}){
+function PopupScreen({lat,lng,setIsOpen}){
     const [address, setAddress] = useState('');
     // 1. 주소-좌표 변환 객체를 생성합니다
     var geocoder = new daum.maps.services.Geocoder();
@@ -21,11 +21,14 @@ function PopupScreen({lat,lng}){
         <>
             <div id="background">
                 <div id="popup">
+                    <h1 style={{textAlign:'center'}}>모임 생성</h1>
                     <form action="" id="group-form">
                         <input type="text" value={a(lng,lat)} readOnly />
-                        <input placeholder="최대 사람 수를 입력해 주세요" type="number" />
+                        <input required placeholder="제목을 입력해 주세요" />
+                        <textarea rows={10} placeholder="내용을 입력해주세요" style={{resize: 'none'}}></textarea>
+                        <input required placeholder="최대 사람 수를 입력해 주세요" type="number" />
                         <button>제출하기</button>
-                        <a href="../main.jsx">나가기</a>
+                        <a onClick={()=>setIsOpen(false)}>모임 생성 취소하기</a>
                     </form>
                 </div>
             </div>

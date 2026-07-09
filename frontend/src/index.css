@@ -12,6 +12,9 @@
     border: 0px;
     box-sizing: border-box;
 }
+a:hover{
+    cursor: pointer;
+}
 html,body,#root{
     height: 100%;
     width: 100%;
