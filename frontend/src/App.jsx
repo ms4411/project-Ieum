@@ -7,31 +7,38 @@ import BottomSheet from './component/BottomSheet.jsx';
 import BottomMenu from './component/BottomMenu.jsx';
 
 function App() {
+  
   const markerRef = useRef(null);
   const setMarkerRef = (obj) => {markerRef.current=obj}
   const [mapObject, setMapObject] = useState(null);
   const [groups, setGroups]=useState([]);
 
-  const createMarker = (lat, lon, img)=>{
-    const locPosition = new kakao.maps.LatLng(lat, lon);
-    let marker;
+  const createMarker = (lat, lng, img = null,iwContent=null, map=mapObject)=>{
+    const locPosition = new kakao.maps.LatLng(lat, lng);
+    let marker = new kakao.maps.Marker({
+        position: locPosition
+    });
+    //마커 이미지 변경
     if(img!=null){
       const imageSrc = img.src; // 카카오 제공 내 위치 동그라미
       const imageSize = new kakao.maps.Size(img.size, img.size); // 동그라미 크기
       const imageOption = { offset: new kakao.maps.Point(img.size/2, img.size/2) }; // 📌 중요: 원형 마커는 중심이 기준점이어야 하므로 반값씩 줍니다!
       const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-      console.log(markerImage)
-        marker = new kakao.maps.Marker({
-        position: locPosition,
-        image: markerImage
-      });
+      marker.setImage(markerImage);
     }
-    else{
-        marker = new kakao.maps.Marker({
-        position: locPosition
+    //마커 창 추가
+    if(iwContent!=null){
+
+      var infowindow = new kakao.maps.InfoWindow({
+          content : iwContent,
+          removable : true
       });
+      // 3. 마커에 클릭 이벤트 등록하기
+      kakao.maps.event.addListener(marker, 'click', function() {
+        // 기능 A: 정보창(InfoWindow) 표시하기
+        infowindow.open(map, marker);
+      })
     }
-    marker.setMap(mapObject);
     return marker
   }
 
@@ -52,11 +59,9 @@ function App() {
           markerRef.current.setMap(null)
           markerRef.current = null; // 지우고 나서 금고를 깨끗하게 비워줍니다.
         }
-        
-        const marker=createMarker(lat, lon, {src:'../public/makerImg.png', size:24})
 
-        // 3. 🚨 생성한 마커를 화면에 보이는 지도 위에 올리기
-        marker.setMap(mapObject);
+        const marker=createMarker(lat, lon, {src:'../public/makerImg.png', size:24}).setMap(mapObject);
+
         setMarkerRef(marker);
         });
         
@@ -69,7 +74,7 @@ function App() {
   return (
   <>
     <Menubar setPosFun={handleMoveToCurrentLocation} addGroups={addGroups}/>
-    <KakaoMap setMapObject={setMapObject}/>
+    <KakaoMap setMapObject={setMapObject} createMarker={createMarker}/>
     <BottomMenu setPosFun={handleMoveToCurrentLocation}/>
     <BottomSheet groups={groups} setGroups={setGroups}/>
   </>
