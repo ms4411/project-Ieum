@@ -27,7 +27,7 @@ function PopupScreen({lat,lng,setIsOpen}){
                         <input type="text" value={a(lng,lat)} />
                         <input required placeholder="제목을 입력해 주세요" />
                         <textarea required rows={10} placeholder="내용을 입력해주세요" style={{resize: 'none'}}></textarea>
-                        <input required placeholder="최대 사람 수를 입력해 주세요" type="number" />
+                        <input min={1} required placeholder="최대 사람 수를 입력해 주세요" type="number" />
                         <button>제출하기</button>
                         <a onClick={()=>setIsOpen(false)}>모임 생성 취소하기</a>
                     </form>
