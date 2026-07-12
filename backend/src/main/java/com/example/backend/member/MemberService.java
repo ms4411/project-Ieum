@@ -20,7 +20,10 @@ public class MemberService {
     private final TokenManager tokenManager;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public String signUp(String name, String pw){
+    public String signUp(String name, String pw, String checkPw){
+        if(pw.equals(checkPw)){
+            return "비밀번호가 일치하지 않습니다";
+        }
         Member member = new Member(name, passwordEncoder.encode(pw));
         memberRepository.save(member);
         return "회원가입 성공";

@@ -2,13 +2,13 @@ package com.example.backend.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class MemberAcceptDTO {
+public class SingInDTO {
     @NotBlank
     String name;
     @NotBlank
     String pw;
+    @NotBlank
+    String checkPw;
 }

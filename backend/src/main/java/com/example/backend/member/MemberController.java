@@ -1,7 +1,8 @@
 package com.example.backend.member;
 
 import com.example.backend.DTO.ListDTO;
-import com.example.backend.DTO.MemberAcceptDTO;
+import com.example.backend.DTO.SingInDTO;
+import com.example.backend.DTO.SingUpDTO;
 import com.example.backend.global.ResponseClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,17 @@ public class MemberController {
     private final ResponseClass responseClass;
 
     @PostMapping()
-    public ResponseEntity<Map<String, String>> singUp(@RequestBody MemberAcceptDTO memberAcceptDTO){
+    public ResponseEntity<Map<String, String>> singUp(@RequestBody SingInDTO singInDTO){
         return responseClass.massageReturn(
                 memberService.signUp(
-                        memberAcceptDTO.getName(), memberAcceptDTO.getPw()
+                        singInDTO.getName(), singInDTO.getPw(), singInDTO.getCheckPw()
                 )
         );
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Map<String, String>> signUp(@RequestBody MemberAcceptDTO memberAcceptDTO){
-        return responseClass.tokenReturn(memberService.signIn(memberAcceptDTO.getName(),memberAcceptDTO.getPw()));
+    public ResponseEntity<Map<String, String>> signUp(@RequestBody SingUpDTO singUpDTO){
+        return responseClass.tokenReturn(memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
     }
 
     @GetMapping()
