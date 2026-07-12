@@ -16,22 +16,22 @@ import java.util.Map;
 @NoArgsConstructor
 @Component
 public class ResponseClass {
-    public ResponseEntity<?> oneResponseReturn(String key, Object value){
+    public ResponseEntity<Map<String,Object>> oneResponseReturn(String key, Object value){
         Map<String,Object> data=new HashMap<>();
         data.put(key, value);
         return ResponseEntity.ok(data);
     }
-    public ResponseEntity<?> massageReturn(String massage){
+    public ResponseEntity<Map<String,String>> massageReturn(String massage){
         Map<String,String> data=new HashMap<String,String>();
         data.put("massage",massage);
         return ResponseEntity.ok(data);
     }
-    public ResponseEntity<?> tokenReturn(String token){
+    public ResponseEntity<Map<String,String>> tokenReturn(String token){
         Map<String,String> data=new HashMap<String,String>();
         data.put("Authorization",token);
         return ResponseEntity.ok(data);
     }
-    public ResponseEntity<?> listReturn(List<?> list){
+    public ResponseEntity<ListDTO> listReturn(List<?> list){
         ListDTO listDTO = new ListDTO(list);
         return ResponseEntity.ok(listDTO);
     }

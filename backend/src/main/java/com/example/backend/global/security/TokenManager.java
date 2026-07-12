@@ -1,7 +1,6 @@
 package com.example.backend.global.security;
 
 import com.example.backend.global.security.error.Exception.TokenException;
-import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

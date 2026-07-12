@@ -1,9 +1,11 @@
 package com.example.backend.group;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,28 +13,22 @@ import lombok.RequiredArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Group {
     @Id
-    UUID id;
-    @NonNull
-    @NotBlank
+    final UUID id=UUID.randomUUID();
+    @Column(nullable = false)
     String head;
-    @NonNull
-    @NotBlank
+    @Column(nullable = false)
     String content;
-    @NonNull
-    @NotNull
+    @Column(nullable = false)
     Long lat;
-    @NonNull
-    @NotNull
+    @Column(nullable = false)
     Long lng;
-    @NonNull
-    @NotNull
+    @Column(nullable = false)
     Long maxPeople;
 
-    @NonNull
-    @NotNull
+    @Column(nullable = false)
     UUID createUserId;
 }

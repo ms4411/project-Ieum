@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,13 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Member {
     @Id
-    @NotNull
     @Column(unique = true, nullable = false)
     final UUID id = UUID.randomUUID();
 
-    @NotBlank
     @Column(unique = true, nullable = false)
     String name;
 
-    @NotBlank
     @Column(nullable = false)
+    @Size(min = 8, message = "최소 8글자 이상 입력")
     String pw;
 }

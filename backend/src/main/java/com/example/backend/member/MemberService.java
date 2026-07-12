@@ -20,19 +20,18 @@ public class MemberService {
     private final TokenManager tokenManager;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public String createMember(String name, String pw){
+    public String signUp(String name, String pw){
         Member member = new Member(name, passwordEncoder.encode(pw));
         memberRepository.save(member);
         return "회원가입 성공";
     }
 
-    public String singUp(String name, String pw){
+    public String signIn(String name, String pw){
         Member member= memberRepository.findByName(name).orElseThrow(LoginException::new);
         if(passwordEncoder.matches(pw,member.getPw())){
             throw new LoginException();
         }
         Map<String, Object> data=new HashMap<>();
-        data.put("role", "member");
         String memberId=member.getId().toString();
         refreshTokenRepository.save(new RefreshToken(memberId, tokenManager.createRefreshToken(memberId)));
         return tokenManager.createAcceptToken(memberId, data);

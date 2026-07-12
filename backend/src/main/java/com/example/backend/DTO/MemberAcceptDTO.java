@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserAcceptDTO {
+public class MemberAcceptDTO {
     @NotBlank
     String name;
     @NotBlank

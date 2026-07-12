@@ -1,10 +1,13 @@
 package com.example.backend.member;
 
-import com.example.backend.DTO.UserAcceptDTO;
+import com.example.backend.DTO.ListDTO;
+import com.example.backend.DTO.MemberAcceptDTO;
 import com.example.backend.global.ResponseClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,19 +17,21 @@ public class MemberController {
     private final ResponseClass responseClass;
 
     @PostMapping()
-    public ResponseEntity<?> createMember(@RequestBody UserAcceptDTO memberAcceptDTO){
-        String name=memberAcceptDTO.getName();
-        String pw=memberAcceptDTO.getPw();
-        return responseClass.massageReturn(memberService.createMember(name, pw));
+    public ResponseEntity<Map<String, String>> singUp(@RequestBody MemberAcceptDTO memberAcceptDTO){
+        return responseClass.massageReturn(
+                memberService.signUp(
+                        memberAcceptDTO.getName(), memberAcceptDTO.getPw()
+                )
+        );
     }
 
-    @PostMapping("/singUp")
-    public ResponseEntity<?> singUp(@RequestBody UserAcceptDTO memberAcceptDTO){
-        return responseClass.tokenReturn(memberService.singUp(memberAcceptDTO.getName(),memberAcceptDTO.getPw()));
+    @PostMapping("/signIn")
+    public ResponseEntity<Map<String, String>> signUp(@RequestBody MemberAcceptDTO memberAcceptDTO){
+        return responseClass.tokenReturn(memberService.signIn(memberAcceptDTO.getName(),memberAcceptDTO.getPw()));
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAllMember(){
+    public ResponseEntity<ListDTO> getAllMember(){
         return responseClass.listReturn(memberService.getAllMember());
     }
 }
