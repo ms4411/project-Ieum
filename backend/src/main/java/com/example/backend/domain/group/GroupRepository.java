@@ -1,4 +1,4 @@
-package com.example.backend.group;
+package com.example.backend.domain.group;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

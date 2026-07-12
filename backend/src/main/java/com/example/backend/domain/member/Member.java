@@ -1,4 +1,4 @@
-package com.example.backend.member;
+package com.example.backend.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

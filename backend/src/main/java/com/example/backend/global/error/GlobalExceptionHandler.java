@@ -1,8 +1,8 @@
-package com.example.backend.global.security.error;
+package com.example.backend.global.error;
 
 import com.example.backend.global.ResponseClass;
-import com.example.backend.global.security.error.Exception.LoginException;
-import com.example.backend.global.security.error.Exception.TokenException;
+import com.example.backend.global.error.Exception.LoginException;
+import com.example.backend.global.error.Exception.TokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

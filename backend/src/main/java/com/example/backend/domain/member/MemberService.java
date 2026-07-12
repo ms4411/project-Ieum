@@ -1,7 +1,7 @@
-package com.example.backend.member;
+package com.example.backend.domain.member;
 
 import com.example.backend.global.security.TokenManager;
-import com.example.backend.global.security.error.Exception.LoginException;
+import com.example.backend.global.error.Exception.LoginException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;

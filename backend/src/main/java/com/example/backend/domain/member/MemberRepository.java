@@ -1,4 +1,4 @@
-package com.example.backend.member;
+package com.example.backend.domain.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

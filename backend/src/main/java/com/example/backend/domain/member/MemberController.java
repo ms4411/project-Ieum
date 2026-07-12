@@ -1,4 +1,4 @@
-package com.example.backend.member;
+package com.example.backend.domain.member;
 
 import com.example.backend.DTO.ListDTO;
 import com.example.backend.DTO.SingInDTO;
