@@ -28,7 +28,7 @@ public class MemberService {
 
     public String signIn(String name, String pw){
         Member member= memberRepository.findByName(name).orElseThrow(LoginException::new);
-        if(passwordEncoder.matches(pw,member.getPw())){
+        if(!passwordEncoder.matches(pw,member.getPw())){
             throw new LoginException();
         }
         Map<String, Object> data=new HashMap<>();
