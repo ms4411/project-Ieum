@@ -7,6 +7,7 @@ import com.example.backend.DTO.SingUpDTO;
 import com.example.backend.global.ResponseClass;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class MemberController {
     private final ResponseClass responseClass;
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseOneDTO<String> singUp(@Valid @RequestBody SingInDTO singInDTO){
         return responseClass.massageReturn(
                 memberService.signUp(
@@ -26,6 +28,7 @@ public class MemberController {
     }
 
     @PostMapping("/signIn")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseOneDTO<String> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
         return responseClass.tokenReturn(memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
     }
