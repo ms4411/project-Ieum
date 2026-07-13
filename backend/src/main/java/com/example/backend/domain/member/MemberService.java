@@ -36,11 +36,17 @@ public class MemberService {
         }
         Map<String, Object> data=new HashMap<>();
         String memberId=member.getId().toString();
-        refreshTokenRepository.save(new RefreshToken(memberId, tokenManager.createRefreshToken(memberId)));
+        //리프레시 토큰 생성 및 저장
+        refreshTokenRepository.save(
+                new RefreshToken(
+                        memberId, tokenManager.createRefreshToken(memberId)
+                )
+        );
+        //액세스 토큰 반환
         return tokenManager.createAcceptToken(memberId, data);
     }
 
-    public List<?> getAllMember(){
+    public List<Member> getAllMember(){
         return memberRepository.findAll();
     }
 }

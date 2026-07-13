@@ -1,14 +1,13 @@
 package com.example.backend.domain.member;
 
-import com.example.backend.DTO.ListDTO;
+import com.example.backend.DTO.ResponseDTO;
+import com.example.backend.DTO.ResponseOneDTO;
 import com.example.backend.DTO.SingInDTO;
 import com.example.backend.DTO.SingUpDTO;
 import com.example.backend.global.ResponseClass;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class MemberController {
     private final ResponseClass responseClass;
 
     @PostMapping()
-    public ResponseEntity<Map<String, String>> singUp(@RequestBody SingInDTO singInDTO){
+    public ResponseOneDTO<String> singUp(@Valid @RequestBody SingInDTO singInDTO){
         return responseClass.massageReturn(
                 memberService.signUp(
                         singInDTO.getName(), singInDTO.getPw(), singInDTO.getCheckPw()
@@ -27,12 +26,12 @@ public class MemberController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Map<String, String>> signUp(@RequestBody SingUpDTO singUpDTO){
+    public ResponseOneDTO<String> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
         return responseClass.tokenReturn(memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
     }
 
     @GetMapping()
-    public ResponseEntity<ListDTO> getAllMember(){
-        return responseClass.listReturn(memberService.getAllMember());
+    public ResponseDTO<?> getAllMember(){
+        return responseClass.successReturn("맴버 전체 조회", memberService.getAllMember());
     }
 }

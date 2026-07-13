@@ -1,5 +1,6 @@
 package com.example.backend.global.error;
 
+import com.example.backend.DTO.ResponseOneDTO;
 import com.example.backend.global.ResponseClass;
 import com.example.backend.global.error.Exception.LoginException;
 import com.example.backend.global.error.Exception.TokenException;
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<?> handleLoginFalse(LoginException e){
+    public ResponseOneDTO<String> handleLoginFalse(LoginException e){
         return responseClass.massageReturn("로그인 실패");
     }
 
