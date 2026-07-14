@@ -1,9 +1,10 @@
 package com.example.backend.DTO;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseCookie;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class TokensDTO {
     String refreshToken;
     String acceptToken;

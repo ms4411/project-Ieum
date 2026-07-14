@@ -1,5 +1,6 @@
 package com.example.backend.global.security;
 
+import com.example.backend.DTO.TokensDTO;
 import com.example.backend.global.error.Exception.TokenException;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
@@ -38,7 +39,8 @@ public class TokenManager {
     public void init() {
         SECRET_KEY = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8)); //암호화
     }
-    public String createAcceptToken(String id, Map<String, Object> tokenContent){
+
+    private String createAcceptToken(String id, Map<String, Object> tokenContent){
         Date now = new Date();
         Date expirationTime = new Date(now.getTime()+VALID_TIME);
         if (id==null || id.isEmpty()){
@@ -53,7 +55,7 @@ public class TokenManager {
                 .compact();
 
     }
-    public String createRefreshToken(String id){
+    private String createRefreshToken(String id){
         Date now = new Date();
         Date expirationTime = new Date(now.getTime()+REFRESH_VALID_TIME);
         return Jwts.builder()
@@ -63,6 +65,13 @@ public class TokenManager {
                 .signWith(SECRET_KEY)
                 .compact();
     }
+
+    public TokensDTO createTokens(String id, Map<String, Object> tokenContent){
+        String acceptToken=createAcceptToken(id, tokenContent);
+        String refreshToken=createRefreshToken(id);
+        return new TokensDTO(refreshToken, acceptToken);
+    }
+
     public Claims getToken(String token){
         try {
             // Bearer 접두사 제거

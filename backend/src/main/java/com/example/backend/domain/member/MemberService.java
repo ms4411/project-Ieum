@@ -38,11 +38,9 @@ public class MemberService {
         Map<String, Object> data=new HashMap<>();
         String memberId=member.getId().toString();
         //리프레시 토큰 생성 및 저장
-        String refreshToken=tokenManager.createRefreshToken(memberId);
-        refreshTokenRepository.save(new RefreshToken(memberId, refreshToken));
-        //액세스 토큰 생성
-        String acceptToken=tokenManager.createAcceptToken(memberId, data);
-        return new TokensDTO(refreshToken,acceptToken);
+        TokensDTO tokens=tokenManager.createTokens(memberId, data);
+        refreshTokenRepository.save(new RefreshToken(memberId, tokens.getRefreshToken()));
+        return tokens;
     }
 
     public List<Member> getAllMember(){
