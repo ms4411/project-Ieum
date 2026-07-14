@@ -1,9 +1,6 @@
 package com.example.backend.domain.member;
 
-import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.DTO.ResponseOneDTO;
-import com.example.backend.DTO.SingInDTO;
-import com.example.backend.DTO.SingUpDTO;
+import com.example.backend.DTO.*;
 import com.example.backend.global.ResponseClass;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +26,12 @@ public class MemberController {
 
     @PostMapping("/signIn")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseOneDTO<String> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
-        return responseClass.tokenReturn(memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
+    public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
+        return new ResponseOneDTO<>(true,"토큰 반환 성공",memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
     }
 
     @GetMapping()
     public ResponseDTO<?> getAllMember(){
-        return responseClass.successReturn("맴버 전체 조회", memberService.getAllMember());
+        return responseClass.successReturn("맴버 전체 조회 성공", memberService.getAllMember());
     }
 }

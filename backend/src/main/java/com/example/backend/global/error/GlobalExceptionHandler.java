@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
@@ -18,10 +19,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<?> handleToken(TokenException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+        if (e.isExpired()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.isExpired());
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.isExpired());
     }
 
     @ExceptionHandler(LoginException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseOneDTO<String> handleLoginFalse(LoginException e){
         return responseClass.massageReturn("로그인 실패");
     }
