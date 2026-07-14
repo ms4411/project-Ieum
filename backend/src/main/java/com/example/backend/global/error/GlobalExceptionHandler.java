@@ -18,11 +18,9 @@ public class GlobalExceptionHandler {
     final private ResponseClass responseClass;
 
     @ExceptionHandler(TokenException.class)
-    public ResponseEntity<?> handleToken(TokenException e){
-        if (e.isExpired()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.isExpired());
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.isExpired());
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public TokenException handleToken(TokenException e){
+        return e;
     }
 
     @ExceptionHandler(LoginException.class)

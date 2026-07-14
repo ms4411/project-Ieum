@@ -1,4 +1,4 @@
-@import url(../index.css);
+@import url(../../index.css);
 #bottom-sheet{
     --padding-top-size:16px;
 }
@@ -46,7 +46,7 @@ hr{
 #group-list>li{
     border-bottom: 1px solid var(--point-color1);
     display:grid;
-    grid-template-columns:1fr 3fr;
+    grid-template-columns:1fr 5fr;
     gap:8px;
     padding:8px;
 }

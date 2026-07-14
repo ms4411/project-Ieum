@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useRef } from 'react'
 import './App.css'
-import Menubar from './component/Menubar.jsx'
-import KakaoMap from './component/KakaoMap.jsx'
-import BottomSheet from './component/BottomSheet.jsx';
-import BottomMenu from './component/BottomMenu.jsx';
+import Menubar from './home/component/Menubar.jsx'
+import KakaoMap from './home/component/KakaoMap.jsx'
+import BottomSheet from './home/component/BottomSheet.jsx';
+import BottomMenu from './home/component/BottomMenu.jsx';
 
 function App() {
   
