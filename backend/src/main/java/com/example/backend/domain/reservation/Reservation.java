@@ -5,6 +5,8 @@ import com.example.backend.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @NoArgsConstructor
@@ -20,5 +22,6 @@ public class Reservation {
     @ManyToOne
     Member toMember;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Group group;
 }
