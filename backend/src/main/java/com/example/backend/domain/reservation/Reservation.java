@@ -14,7 +14,7 @@ public class Reservation {
     @Id
     Long id;
 
-    GroupStatus groupStatus;
+    GroupStatus groupStatus=GroupStatus.REQUEST;
     @ManyToOne
     Member fromMember;
     @ManyToOne
