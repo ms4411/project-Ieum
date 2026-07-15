@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +46,9 @@ public class MemberService {
 
     public List<Member> getAllMember(){
         return memberRepository.findAll();
+    }
+
+    public Member getMember(UUID id){
+        return memberRepository.findById(id).orElseThrow();
     }
 }
