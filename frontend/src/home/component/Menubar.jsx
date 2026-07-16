@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate  } from 'react-router-dom';
-import Button from "./Button";
+import Button from "../../common/Button";
 import '../componentCss/Menubar.css'
 import PopupScreen from "./PopupScreen";
 

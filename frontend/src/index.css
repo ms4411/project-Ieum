@@ -43,6 +43,7 @@ button,input{
 input{
     padding: 0 8px;
     box-shadow: 0px 0px 2px 1px var(--point-color1);
+    width: 100%;
 }
 .box{
     background-color: white;

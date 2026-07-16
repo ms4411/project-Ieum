@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import './../componentCss/PopupScreen.css'
-import Button from "./Button";
+import Button from "../../common/Button";
 function PopupScreen({lat,lng,setIsOpen}){
     const [address, setAddress] = useState('');
     // 1. 주소-좌표 변환 객체를 생성합니다

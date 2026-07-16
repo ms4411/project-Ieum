@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../componentCss/BottomMenu.css'
-import Button from './Button';
+import Button from '../../common/Button';
 import PopupScreen from './PopupScreen';
 function BottomMenu({setPosFun, createMarker}){
     
