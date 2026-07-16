@@ -24,7 +24,7 @@ function BottomSheet(props){
 
     return(
         <>
-            <div id="bottom-sheet" onClick={MoveSheet} style={sheetCss}>
+            <div id="bottom-sheet" className='box' onClick={MoveSheet} style={sheetCss}>
                 <hr />
                 <ul id='group-list'>
                     {props.groups.map((item, index) => (

@@ -6,11 +6,11 @@ function Button({ img, name, fun, svg }){
     }
     if (img){
         return(
-            <button style={buttonCss} onClick={fun}><img src={img}/>{name}</button>
+            <button className="box" style={buttonCss} onClick={fun}><img src={img}/>{name}</button>
         )
     }
     return(
-        <button style={buttonCss} onClick={fun}>{name}</button>
+        <button className="box" style={buttonCss} onClick={fun}>{name}</button>
     )
 }
 

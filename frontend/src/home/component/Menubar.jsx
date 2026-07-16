@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate  } from 'react-router-dom';
 import Button from "./Button";
 import '../componentCss/Menubar.css'
 import PopupScreen from "./PopupScreen";
 
 function Menubar({setPosFun}){
     //현재 한국 시간 받기
+    const navigate = useNavigate();
     const getKoreaCurrentDateTime = () => {
         // 한국 시간(UTC+9)을 맞추기 위해 시차만큼 밀어줍니다.
         const kstOffset = 9 * 60 * 60 * 1000;
@@ -54,7 +56,7 @@ function Menubar({setPosFun}){
                 </div>
                 
                 <div id="btn-list">
-                    <Button name="로그인" fun={null}/>
+                    <Button name="로그인" fun={() => navigate("/Login")}/>
                     <Button name="내 위치" fun={setPosFun}/>
                     <Button name="모임 생성" fun={createGroup}/>
                     <Button name="현재 시각" fun={()=>{
