@@ -4,12 +4,11 @@ import com.example.backend.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,8 +35,9 @@ public class Group {
     //참여자
     @Column(nullable = false)
     Long maxPeople;
-    @Column(nullable = false)
-    UUID createUserId;
+    @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    Member createUser;
 
     List<Member> inMembers;
 

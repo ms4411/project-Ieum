@@ -1,5 +1,5 @@
 package com.example.backend.domain.reservation;
 
-public enum GroupStatus {
+public enum ReservationStatus {
     ALLOW, REFUSE, REQUEST, DELETE
 }

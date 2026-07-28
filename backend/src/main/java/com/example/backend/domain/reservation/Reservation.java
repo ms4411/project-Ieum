@@ -16,10 +16,12 @@ public class Reservation {
     @Id
     Long id;
 
-    GroupStatus groupStatus=GroupStatus.REQUEST;
+    ReservationStatus reservationStatus=ReservationStatus.REQUEST;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Member fromMember;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Member toMember;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)

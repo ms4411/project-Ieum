@@ -23,21 +23,18 @@ import java.util.UUID;
 
 
 @Component
-@RequiredArgsConstructor
 public class TokenManager {
-    @Value("${jwt.secret-key}")
-    private String SECRET_KEY_STRING; //보안 키
-
+    private final String SECRET_KEY_STRING; //보안 키
     private SecretKey SECRET_KEY;
-
     final private RefreshTokenRepository refreshTokenRepository;
 
     final static private Long VALID_TIME= 5 * 60 * 1000L; //토큰 허용 시간(5분)
     final static private Long REFRESH_VALID_TIME= 14 * 24 * 60 * 60 * 1000L;
 
-    @PostConstruct //Value 후 자동 실행
-    public void init() {
-        SECRET_KEY = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8)); //암호화
+    public TokenManager(TokenProperties tokenProperties, RefreshTokenRepository refreshTokenRepository){
+        this.SECRET_KEY_STRING=tokenProperties.secretKey();
+        this.SECRET_KEY = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8)); //암호화
+        this.refreshTokenRepository=refreshTokenRepository;
     }
 
     private String createAcceptToken(String id, Map<String, Object> tokenContent){

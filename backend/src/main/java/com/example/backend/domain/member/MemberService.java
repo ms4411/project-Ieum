@@ -1,6 +1,7 @@
 package com.example.backend.domain.member;
 
 import com.example.backend.DTO.TokensDTO;
+import com.example.backend.domain.group.GroupRepository;
 import com.example.backend.global.security.TokenManager;
 import com.example.backend.global.error.Exception.LoginException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
@@ -21,6 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TokenManager tokenManager;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final GroupRepository groupRepository;
 
     public String signUp(String name, String pw, String checkPw){
         if(pw.equals(checkPw)){
@@ -38,7 +40,6 @@ public class MemberService {
         }
         Map<String, Object> data=new HashMap<>();
         String memberId=member.getId().toString();
-        //리프레시 토큰 생성 및 저장
         TokensDTO tokens=tokenManager.createTokens(memberId, data);
         refreshTokenRepository.save(new RefreshToken(memberId, tokens.getRefreshToken()));
         return tokens;
@@ -46,6 +47,9 @@ public class MemberService {
 
     public List<Member> getAllMember(){
         return memberRepository.findAll();
+    }
+    public List<Member> getAllMemberByGroup(UUID groupId){
+        return memberRepository.findAllByGroup(groupRepository.findById(groupId).orElseThrow());
     }
 
     public Member getMember(UUID id){
