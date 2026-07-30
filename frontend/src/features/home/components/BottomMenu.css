@@ -6,12 +6,12 @@
     /* 위치 지정 */
     position: absolute;
     right: 0;
-    bottom: var(--first-bottom-sheet-height);
+    bottom: calc(var(--first-bottom-sheet-height) + var(--bottom-nav-height));
     z-index: 999;
     /* 크기지정 */
     width: 48px;
     padding-bottom: 8px;
-    padding-right: 8px;
+    padding-right: max(8px, env(safe-area-inset-right));
 
     background-color: transparent;
 }

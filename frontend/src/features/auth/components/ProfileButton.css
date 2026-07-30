@@ -1,0 +1,50 @@
+.profile-button{
+    position: relative;
+    flex-shrink: 0;
+}
+.profile-button__avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-button__backdrop{
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 1000;
+}
+.profile-button__menu{
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 148px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft-lg);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+}
+.profile-button__greeting{
+    padding: 8px 10px 4px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+.profile-button__menu button{
+    text-align: left;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--color-text);
+    background: none;
+}
+.profile-button__menu button:active{
+    background-color: var(--color-bg);
+}

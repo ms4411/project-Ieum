@@ -1,45 +1,66 @@
 #menubar{
     background-color: transparent;
-    width: 100vw;
-    height: var(--menubar-size);
+    width: 100%;
     padding: 16px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
     position: absolute;
     top: 0;
     left: 0;
     display: flex;
     flex-direction: column;
-    gap:8px;
+    gap: 10px;
     z-index: 999;
 }
 
-#btn-list{
+#menubar-top-row{
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    gap:16px
+    gap: 10px;
 }
-#btn-list>*{
-    flex:1;
+#menubar-top-row > input{
+    flex: 1;
+    height: 40px;
+}
+
+#datetime-row{
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 #datetime-input{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-radius: var(--border-radius-size);
+    border-radius: var(--radius-sm);
+    flex: 1;
 }
 #datetime-input>input{
     text-align: center;
     font-weight: bold;
 }
 #datetime-input>input:not(:last-child){
-    border-right: 1px solid;
+    border-right: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 #datetime-input>input:not(:first-child){
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    border-left: none;
 }
 
+#reset-datetime-btn{
+    flex-shrink: 0;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary);
+    background-color: var(--color-surface);
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+}
 
 input[type=text]{
     padding-top: 8px;

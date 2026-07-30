@@ -1,8 +1,16 @@
 // 마커 생성 + 이미지/인포윈도우 부착 로직을 한 곳에 모은 어댑터
-export function createKakaoMarker({ lat, lng, image, infoWindowContent, map }) {
+export function createKakaoMarker({
+  lat,
+  lng,
+  image,
+  infoWindowContent,
+  map,
+  draggable,
+  onDragEnd,
+}) {
   const { kakao } = window;
   const position = new kakao.maps.LatLng(lat, lng);
-  const marker = new kakao.maps.Marker({ position });
+  const marker = new kakao.maps.Marker({ position, draggable: Boolean(draggable) });
 
   if (image) {
     const imageSize = new kakao.maps.Size(image.size, image.size);
@@ -20,6 +28,13 @@ export function createKakaoMarker({ lat, lng, image, infoWindowContent, map }) {
     });
     kakao.maps.event.addListener(marker, 'click', () => {
       infoWindow.open(map, marker);
+    });
+  }
+
+  if (draggable && onDragEnd) {
+    kakao.maps.event.addListener(marker, 'dragend', () => {
+      const nextPosition = marker.getPosition();
+      onDragEnd({ lat: nextPosition.getLat(), lng: nextPosition.getLng() });
     });
   }
 

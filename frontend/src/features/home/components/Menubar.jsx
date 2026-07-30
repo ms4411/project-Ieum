@@ -1,21 +1,19 @@
-import { useNavigate } from 'react-router-dom';
-import Button from '../../../shared/components/Button/Button';
-import PopupScreen from './PopupScreen';
-import { useCreateGroupPopup } from '../hooks/useCreateGroupPopup';
 import { useKoreaDateTime } from '../hooks/useKoreaDateTime';
 import './Menubar.css';
 
-function Menubar({ onMoveToCurrentLocation }) {
-  const navigate = useNavigate();
+// 로그인/회원가입/내 모임/마이프로필처럼 다른 화면으로 이동하는 메뉴는
+// 하단 BottomNav(모임/참여한 모임/마이프로필)로 옮겼고,
+// 이 화면(지도)과 직접 관련된 컨트롤만 여기 남긴다.
+function Menubar() {
   const { date, setDate, time, setTime, resetToNow } = useKoreaDateTime();
-  const { isOpen, latLng, openCreateGroupPopup, closeCreateGroupPopup } =
-    useCreateGroupPopup();
 
   return (
-    <>
-      <div id="menubar">
+    <div id="menubar">
+      <div id="menubar-top-row">
         <input type="text" placeholder="검색창" />
+      </div>
 
+      <div id="datetime-row">
         <div id="datetime-input">
           <input
             type="date"
@@ -28,23 +26,11 @@ function Menubar({ onMoveToCurrentLocation }) {
             onChange={(e) => setTime(e.target.value)}
           />
         </div>
-
-        <div id="btn-list">
-          <Button name="로그인" onClick={() => navigate('/login')} />
-          <Button name="내 위치" onClick={onMoveToCurrentLocation} />
-          <Button name="모임 생성" onClick={openCreateGroupPopup} />
-          <Button name="현재 시각" onClick={resetToNow} />
-        </div>
+        <button type="button" id="reset-datetime-btn" onClick={resetToNow}>
+          현재 시각
+        </button>
       </div>
-
-      {isOpen && (
-        <PopupScreen
-          lat={latLng.lat}
-          lng={latLng.lng}
-          onClose={closeCreateGroupPopup}
-        />
-      )}
-    </>
+    </div>
   );
 }
 

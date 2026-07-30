@@ -1,27 +1,67 @@
 /* css 작성 파일 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
 :root{
-    --border-radius-size: 8px;
+    /* ---- 기존 변수명 (하위 호환) ---- */
+    --border-radius-size: 16px;
     --menubar-size:100px;
-    --point-color1:#666;
+    --point-color1: var(--color-border-strong);
     --hr-size:4px;
-    --first-bottom-sheet-height:50px;
+    --first-bottom-sheet-height:56px;
+    --bottom-nav-height:64px;
+
+    /* ---- 새 디자인 토큰: 가볍고 친숙한 톤 ---- */
+    --color-bg: #FFFBF5;
+    --color-surface: #FFFFFF;
+    --color-primary: #FF8A65;
+    --color-primary-dark: #F4703D;
+    --color-secondary: #6FCF97;
+    --color-text: #3A3A3A;
+    --color-text-muted: #9B9B9B;
+    --color-border: #F1E4D6;
+    --color-border-strong: #E3D2C0;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --shadow-soft: 0 4px 16px rgba(58, 42, 30, 0.08);
+    --shadow-soft-lg: 0 8px 28px rgba(58, 42, 30, 0.12);
+    --font-friendly: 'Gowun Dodum', 'Apple SD Gothic Neo', sans-serif;
 }
 *{
     margin: 0px;
     padding: 0px;
     border: 0px;
     box-sizing: border-box;
+    font-family: var(--font-friendly);
 }
 a:hover{
     cursor: pointer;
 }
-html,body,#root{
+html,body{
     height: 100%;
+    height: 100dvh; /* 모바일 브라우저 주소창 표시/숨김에 따른 100vh 흔들림 방지 */
     width: 100%;
+    overscroll-behavior: none; /* 당겨서 새로고침, 바운스 스크롤 방지 */
 }
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1F1B18; /* 9:20 비율 밖 여백(레터박스) 색상 */
+}
+/* 화면 비율을 세로로 긴 모바일 화면(9:20)으로 고정한다.
+   width/height를 각각 vw·dvh 기준으로 계산한 min()으로 잡아서,
+   브라우저 창이 옆으로 넓든 위아래로 길든 항상 9:20 비율을 유지한 채
+   화면 안에 꽉 차게(레터박스만 남기고) 들어간다. */
 #root{
     position: relative;
     overflow: hidden;
+    aspect-ratio: 9 / 20;
+    width: min(100vw, calc(100dvh * 9 / 20));
+    height: min(100dvh, calc(100vw * 20 / 9));
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.35);
 }
 img{
     width: 100%;
@@ -34,19 +74,85 @@ ul{
 hr{
     height: var(--hr-size);
     border-radius: 9999px;
-    background-color: var(--point-color1);
+    background-color: var(--color-border-strong);
 }
-button,input{
+button{
     cursor: pointer;
-    border-radius: var(--border-radius-size);
+    touch-action: manipulation; /* 더블탭 확대, 300ms 탭 지연 방지 */
+    -webkit-tap-highlight-color: transparent; /* 탭 시 회색 하이라이트 제거 */
+    -webkit-touch-callout: none; /* 롱프레스 시 iOS 콜아웃 메뉴 방지 */
+    user-select: none;
 }
-input{
-    padding: 0 8px;
-    box-shadow: 0px 0px 2px 1px var(--point-color1);
+input,textarea{
+    cursor: text;
     width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    font-size: 16px; /* 16px 미만이면 iOS Safari가 포커스 시 자동 확대한다 */
+    color: var(--color-text);
+}
+input:focus,textarea:focus{
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255,138,101,0.15);
+}
+input[type=date],input[type=time]{
+    cursor: pointer;
 }
 .box{
-    background-color: white;
+    background-color: var(--color-surface);
     border-radius: var(--border-radius-size);
-    box-shadow: 0px 0px 3px 1px var(--point-color1);
+    box-shadow: var(--shadow-soft);
+}
+
+/* ---- 공용 버튼 (shared/components/Button) ---- */
+.app-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.app-button:active{
+    transform: scale(0.96);
+}
+.app-button--filled{
+    background-color: var(--color-primary);
+    color:#fff;
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    box-shadow: var(--shadow-soft);
+    width: 100%;
+}
+.app-button--filled:hover{
+    background-color: var(--color-primary-dark);
+}
+.app-button--outline{
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    width: 100%;
+}
+.app-button--outline:hover{
+    background-color: rgba(255,138,101,0.08);
+}
+.app-button--icon{
+    background-color: var(--color-surface);
+    border-radius: 999px;
+    padding: 10px;
+    box-shadow: var(--shadow-soft);
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+.app-button--icon img{
+    width:20px;
+    height:20px;
 }
