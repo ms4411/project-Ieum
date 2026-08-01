@@ -12,7 +12,8 @@ function BottomSheet(props){
             setIsSheetUp(true)
     }
     let sheetCss={
-        transform:isSheetUp?'translateY(0)' : 'translateY(calc(100% - 50px))'
+        transform:isSheetUp?'translateY(0)' : 'translateY(calc(100% - var(--first-bottom-sheet-height)))',
+        innerHeight:"calc(100% - var(--menubar-size))"
     };
 
     useEffect(() => {
