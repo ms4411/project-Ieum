@@ -10,7 +10,7 @@
     z-index: 999;
     /* 크기 */
     width: 100%;
-    height: 80%;
+    height: calc(100% - var(--menubar-size));
     padding-top: var(--padding-top-size);
     /* 모양 */
     transform: translateY(calc(100% - var(--first-bottom-sheet-height)));

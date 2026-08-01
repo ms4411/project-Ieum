@@ -4,7 +4,7 @@
 :root{
     /* ---- 기존 변수명 (하위 호환) ---- */
     --border-radius-size: 16px;
-    --menubar-size:100px;
+    --menubar-size:200px;
     --point-color1: var(--color-border-strong);
     --hr-size:4px;
     --first-bottom-sheet-height:56px;
