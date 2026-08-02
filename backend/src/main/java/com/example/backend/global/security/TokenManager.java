@@ -4,20 +4,28 @@ import com.example.backend.DTO.TokensDTO;
 import com.example.backend.global.error.Exception.TokenException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.example.backend.global.security.TokenFilter.AUTHORIZATION_HEADER;
+import static com.example.backend.global.security.TokenFilter.BEARER_PREFIX;
 
 //id는 subject에 저장
 //role는 역할이나 권한
@@ -98,5 +106,53 @@ public class TokenManager {
     public String getSubject(String token){
         Claims payload=getToken(token);
         return payload.getSubject();
+    }
+    //---------------------------------------------filter를 위한 메서드
+
+    // ----------------------------------------------------------------
+    // 1. JWT 토큰 유효성 검증
+    // ----------------------------------------------------------------
+    public boolean validateToken(String token) {
+        try {
+            // 토큰 파싱 시도 (비밀키로 서명 검증 및 만료 시간 확인)
+            Jwts.parser().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new TokenException("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            throw new TokenException("만료된 JWT 토큰입니다.", true);
+        } catch (UnsupportedJwtException e) {
+            throw new TokenException("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new TokenException("JWT 토큰이 잘못되었습니다.");
+        }
+    }
+    // ----------------------------------------------------------------
+    // 2. JWT 토큰에서 Authentication 객체 추출
+    // ----------------------------------------------------------------
+    private static final String AUTHORITIES_KEY = "rols";
+    public Authentication getAuthentication(String accessToken) {
+        // 토큰 복호화하여 내부 Claim 추출
+        Claims claims = getToken(accessToken);
+
+        if (claims.get(AUTHORITIES_KEY) == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        // 클레임에서 권한 정보 가져오기 (예: "ROLE_USER,ROLE_ADMIN")
+        //SimpleGrantedAuthority으로 이루어진 리스트(authorities)에 저장
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        // UserDetails 객체를 만들어 Authentication 리턴
+        //(DB 조회 없이 토큰 정보만으로 생성)
+        //UserDetails : 스프링 시큐리티에서 "사용자 정보"를 다루기 위한 표준 규격
+        //(인터페이스)
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
+
+        //UsernamePasswordAuthenticationToken: Authentication를 구현한 실체 클래스
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 }
