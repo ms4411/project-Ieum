@@ -4,11 +4,13 @@
 :root{
     /* ---- 기존 변수명 (하위 호환) ---- */
     --border-radius-size: 16px;
-    --menubar-size:200px;
+    --menubar-size:100px;
     --point-color1: var(--color-border-strong);
     --hr-size:4px;
     --first-bottom-sheet-height:56px;
     --bottom-nav-height:64px;
+    --menubar-height:128px; /* 상단 menubar 고정 높이: bottomSheet가 이 영역을 침범하지 못하게 기준으로 삼는다 */
+    --menubar-gap:12px; /* 확장된 bottomSheet와 menubar 사이 가시성 확보용 여백 */
 
     /* ---- 새 디자인 토큰: 가볍고 친숙한 톤 ---- */
     --color-bg: #FFFBF5;

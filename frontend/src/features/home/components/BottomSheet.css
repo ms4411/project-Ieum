@@ -2,14 +2,16 @@
     --padding-top-size:16px;
 }
 #bottom-sheet{
-    /* 위치 */
+    /* 위치: top/bottom을 동시에 지정해서, 펼쳐졌을 때도 상단은 항상
+       menubar 아래(+ 여백)에서 시작하고 하단은 bottom-nav 위에서 끝나도록 고정한다.
+       (height를 따로 주지 않아도 top~bottom 사이 크기로 자동 계산됨) */
     position: absolute;
+    top: calc(var(--menubar-height) + var(--menubar-gap));
     bottom: var(--bottom-nav-height);
     left: 0;
     z-index: 999;
     /* 크기 */
     width: 100%;
-    height: 80%;
     padding-top: var(--padding-top-size);
     /* 모양 */
     transform: translateY(calc(100% - var(--first-bottom-sheet-height)));
@@ -51,4 +53,8 @@ hr{
     box-shadow: inset 0px 0px 3px 1px var(--point-color1);
     border-radius: var(--border-radius-size);
     padding:8px;
+    aspect-ratio: 1/1;
+    height: 100%;
+    width: auto;
+    align-self: center;
 }

@@ -2,6 +2,7 @@ package com.example.backend.global.security;
 
 import com.example.backend.DTO.TokensDTO;
 import com.example.backend.global.error.Exception.TokenException;
+import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -55,12 +56,14 @@ public class TokenManager {
     private String createRefreshToken(String id){
         Date now = new Date();
         Date expirationTime = new Date(now.getTime()+REFRESH_VALID_TIME);
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .subject(id)
                 .issuedAt(now)
                 .expiration(expirationTime)
                 .signWith(SECRET_KEY)
                 .compact();
+        refreshTokenRepository.save(new RefreshToken(id, refreshToken));
+        return refreshToken;
     }
 
     public TokensDTO createTokens(String id, Map<String, Object> tokenContent){

@@ -1,6 +1,7 @@
 #menubar{
     background-color: transparent;
     width: 100%;
+    height: var(--menubar-height);
     padding: 16px;
     padding-top: max(16px, env(safe-area-inset-top));
     padding-left: max(16px, env(safe-area-inset-left));

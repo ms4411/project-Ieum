@@ -16,21 +16,6 @@ public class MemberController {
     private final MemberService memberService;
     private final ResponseClass responseClass;
 
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseOneDTO<String> singUp(@Valid @RequestBody SingInDTO singInDTO){
-        return responseClass.massageReturn(
-                memberService.signUp(
-                        singInDTO.getName(), singInDTO.getPw(), singInDTO.getCheckPw()
-                )
-        );
-    }
-
-    @PostMapping("/signIn")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
-        return new ResponseOneDTO<>(true,"토큰 반환 성공",memberService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
-    }
 
     @GetMapping()
     public ResponseDTO<?> getAllMember(){
