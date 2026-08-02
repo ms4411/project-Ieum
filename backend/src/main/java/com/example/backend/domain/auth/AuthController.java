@@ -17,7 +17,7 @@ public class AuthController {
     private final ResponseClass responseClass;
     private final AuthService authService;
 
-    @PostMapping()
+    @PostMapping("/singUp")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseOneDTO<String> singUp(@Valid @RequestBody SingInDTO singInDTO){
         return responseClass.massageReturn(
@@ -27,7 +27,7 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
         return new ResponseOneDTO<>(true,"토큰 반환 성공",authService.signIn(singUpDTO.getName(), singUpDTO.getPw()));

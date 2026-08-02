@@ -95,4 +95,8 @@ public class TokenManager {
             throw new TokenException("유효 토큰이 아닙니다.");
         }
     }
+    public String getSubject(String token){
+        Claims payload=getToken(token);
+        return payload.getSubject();
+    }
 }
