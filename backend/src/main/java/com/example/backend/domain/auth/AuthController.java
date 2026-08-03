@@ -8,6 +8,7 @@ import com.example.backend.global.ResponseClass;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -31,5 +32,10 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
         return new ResponseOneDTO<>(true,"토큰 반환 성공",authService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseOneDTO<String> logout(@Header("Authorization") String token){
+        return responseClass.massageReturn(authService.logout(token));
     }
 }

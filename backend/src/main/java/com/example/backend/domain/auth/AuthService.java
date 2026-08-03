@@ -19,6 +19,7 @@ import java.util.Map;
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final TokenManager  tokenManager;
 
     public String signUp(String name, String pw, String checkPw){
@@ -37,7 +38,13 @@ public class AuthService {
         }
         Map<String, Object> data=new HashMap<>();
         String memberId=member.getId().toString();
-        TokensDTO tokens=tokenManager.createTokens(memberId, data);
-        return tokens;
+        return tokenManager.createTokens(memberId, data);
+    }
+
+    public String logout(String token){
+        String sub=tokenManager.getSubject(token);
+        RefreshToken refreshToken=refreshTokenRepository.findById(sub).orElseThrow();
+        refreshTokenRepository.delete(refreshToken);
+        return "로그아웃 성공";
     }
 }

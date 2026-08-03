@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.index.Indexed;
 public class RefreshToken {
     @Id
     @NonNull
-    private String id;
+    private String sub;
 
     @Indexed
     @NonNull
