@@ -33,4 +33,13 @@ public class UserService {
         ).orElseThrow();
         user.changeNickname(nickname);
     }
+
+    public void deleteUser(String token){
+        User user=userRepository.findById(
+                UUID.fromString(
+                        tokenManager.getSubject(token)
+                )
+        ).orElseThrow();
+        userRepository.delete(user);
+    }
 }

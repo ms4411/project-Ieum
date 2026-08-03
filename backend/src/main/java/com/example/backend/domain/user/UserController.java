@@ -5,6 +5,7 @@ import com.example.backend.global.ResponseClass;
 import com.example.backend.global.security.TokenManager;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,4 +40,9 @@ public class UserController {
         userService.changeNickname(token, data.data());
     }
 
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@Header("Authorization")String token){
+        userService.deleteUser(token);
+    }
 }
