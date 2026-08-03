@@ -22,17 +22,21 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenManager  tokenManager;
 
-    public String signUp(String name, String pw, String checkPw){
+    public String signUp(String loginId, String name, String pw, String checkPw){
         if(pw.equals(checkPw)){
             return "비밀번호가 일치하지 않습니다";
         }
-        User user = new User(name, passwordEncoder.encode(pw));
+        User user = User.builder()
+                .loginId(loginId)
+                .pw(pw)
+                .nickname(name)
+                .build();
         userRepository.save(user);
         return "회원가입 성공";
     }
 
-    public TokensDTO signIn(String name, String pw){
-        User user = userRepository.findByName(name).orElseThrow(LoginException::new);
+    public TokensDTO signIn(String loginId, String pw){
+        User user = userRepository.findByLoginId(loginId).orElseThrow(LoginException::new);
         if(!passwordEncoder.matches(pw, user.getPw())){
             throw new LoginException();
         }

@@ -20,18 +20,18 @@ public class AuthController {
 
     @PostMapping("/singUp")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseOneDTO<String> singUp(@Valid @RequestBody SingInDTO singInDTO){
+    public ResponseOneDTO<String> singUp(@Valid @RequestBody SingUpDTO singUpDTO){
         return responseClass.massageReturn(
                 authService.signUp(
-                        singInDTO.getName(), singInDTO.getPw(), singInDTO.getCheckPw()
+                        singUpDTO.getLoginId(), singUpDTO.getNickname(), singUpDTO.getPw(), singUpDTO.getCheckPw()
                 )
         );
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingUpDTO singUpDTO){
-        return new ResponseOneDTO<>(true,"토큰 반환 성공",authService.signIn(singUpDTO.getName(), singUpDTO.getPw()));
+    public ResponseOneDTO<TokensDTO> signUp(@Valid @RequestBody SingInDTO singInDTO){
+        return new ResponseOneDTO<>(true,"토큰 반환 성공",authService.signIn(singInDTO.getLoginId(), singInDTO.getPw()));
     }
 
     @PostMapping("/logout")

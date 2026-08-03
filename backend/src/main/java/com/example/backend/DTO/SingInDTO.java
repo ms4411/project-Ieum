@@ -6,9 +6,7 @@ import lombok.Getter;
 @Getter
 public class SingInDTO {
     @NotBlank
-    String name;
+    String loginId;
     @NotBlank
     String pw;
-    @NotBlank
-    String checkPw;
 }

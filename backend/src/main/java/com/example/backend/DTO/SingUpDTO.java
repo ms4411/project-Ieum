@@ -6,7 +6,11 @@ import lombok.Getter;
 @Getter
 public class SingUpDTO {
     @NotBlank
-    String name;
+    String loginId;
     @NotBlank
     String pw;
+    @NotBlank
+    String checkPw;
+    @NotBlank
+    String nickname;
 }
