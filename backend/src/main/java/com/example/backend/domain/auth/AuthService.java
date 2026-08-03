@@ -1,8 +1,8 @@
 package com.example.backend.domain.auth;
 
 import com.example.backend.DTO.TokensDTO;
-import com.example.backend.domain.member.Member;
-import com.example.backend.domain.member.MemberRepository;
+import com.example.backend.domain.user.User;
+import com.example.backend.domain.user.UserRepository;
 import com.example.backend.global.error.Exception.LoginException;
 import com.example.backend.global.security.TokenManager;
 import com.example.backend.global.security.refreshToken.RefreshToken;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenManager  tokenManager;
 
@@ -26,18 +26,18 @@ public class AuthService {
         if(pw.equals(checkPw)){
             return "비밀번호가 일치하지 않습니다";
         }
-        Member member = new Member(name, passwordEncoder.encode(pw));
-        memberRepository.save(member);
+        User user = new User(name, passwordEncoder.encode(pw));
+        userRepository.save(user);
         return "회원가입 성공";
     }
 
     public TokensDTO signIn(String name, String pw){
-        Member member= memberRepository.findByName(name).orElseThrow(LoginException::new);
-        if(!passwordEncoder.matches(pw,member.getPw())){
+        User user = userRepository.findByName(name).orElseThrow(LoginException::new);
+        if(!passwordEncoder.matches(pw, user.getPw())){
             throw new LoginException();
         }
         Map<String, Object> data=new HashMap<>();
-        String memberId=member.getId().toString();
+        String memberId= user.getId().toString();
         return tokenManager.createTokens(memberId, data);
     }
 

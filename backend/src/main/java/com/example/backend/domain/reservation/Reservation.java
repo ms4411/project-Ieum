@@ -1,7 +1,7 @@
 package com.example.backend.domain.reservation;
 
 import com.example.backend.domain.group.Group;
-import com.example.backend.domain.member.Member;
+import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,10 +19,10 @@ public class Reservation {
     ReservationStatus reservationStatus=ReservationStatus.REQUEST;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Member fromMember;
+    User fromUser;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Member toMember;
+    User toUser;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     Group group;

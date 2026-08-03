@@ -1,10 +1,8 @@
-package com.example.backend.domain.member;
+package com.example.backend.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +14,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class User {
     @Id
     @Column(unique = true, nullable = false)
     final UUID id = UUID.randomUUID();

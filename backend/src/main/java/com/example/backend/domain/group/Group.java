@@ -1,6 +1,6 @@
 package com.example.backend.domain.group;
 
-import com.example.backend.domain.member.Member;
+import com.example.backend.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -37,8 +37,8 @@ public class Group {
     Long maxPeople;
     @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Member createUser;
+    User createUser;
 
-    List<Member> inMembers;
+    List<User> inUsers;
 
 }
