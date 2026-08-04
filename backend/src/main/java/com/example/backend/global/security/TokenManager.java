@@ -70,7 +70,12 @@ public class TokenManager {
                 .expiration(expirationTime)
                 .signWith(SECRET_KEY)
                 .compact();
-        refreshTokenRepository.save(new RefreshToken(id, refreshToken));
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                        .sub(id)
+                        .token(refreshToken)
+                        .build()
+        );
         return refreshToken;
     }
 
