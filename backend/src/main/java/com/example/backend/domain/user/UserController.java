@@ -26,7 +26,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseDTO.successRes getMe(@Header("Authorization") String token){
+    public ResponseDTO.successRes getMe(@RequestHeader("Authorization") String token){
+        System.out.println(token);
         String sub = tokenManager.getSubject(token);
         return ResponseDTO.successRes.builder()
                 .data(Map.of("myData",userService.getById(UUID.fromString(sub))))
@@ -34,13 +35,13 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public void changeNickname(OneDTO<String> NewNickname, @Header("Authorization")String token){
+    public void changeNickname(OneDTO<String> NewNickname, @RequestHeader("Authorization")String token){
         userService.changeNickname(token, NewNickname.data());
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@Header("Authorization")String token){
+    public void deleteUser(@RequestHeader("Authorization")String token){
         userService.deleteUser(token);
     }
 }

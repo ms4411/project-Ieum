@@ -6,10 +6,6 @@ import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,15 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.example.backend.global.security.TokenFilter.AUTHORIZATION_HEADER;
-import static com.example.backend.global.security.TokenFilter.BEARER_PREFIX;
 
 //id는 subject에 저장
 //role는 역할이나 권한
@@ -52,6 +44,10 @@ public class TokenManager {
         if (id==null || id.isEmpty()){
             id= UUID.randomUUID().toString();
         }
+        tokenContent.computeIfPresent("role", (k, v) -> v + ",ROLE_LOGIN");
+        if (!tokenContent.containsKey("role")) {
+            tokenContent.put("role","ROLE_LOGIN");
+        }
         return Jwts.builder() //토큰 발행
                 .subject(id)
                 .issuedAt(now)
@@ -74,6 +70,7 @@ public class TokenManager {
                 RefreshToken.builder()
                         .sub(id)
                         .token(refreshToken)
+                        .expiredDate(expirationTime)
                         .build()
         );
         return refreshToken;
@@ -91,7 +88,6 @@ public class TokenManager {
             if (token != null && token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
-
             // 토큰 서명을 검증하고 내부 데이터(Claims)를 파싱
             // 만료되었거나 누군가 1글자라도 위조했다면 예외(Exception)가 발생.
             return Jwts.parser()
@@ -101,11 +97,15 @@ public class TokenManager {
                     .parseSignedClaims(token) //서명 및 만료기간 인증. 데이터 복호화
                     .getPayload(); //토큰에서 페이로드만 반환
 
-        } catch (ExpiredJwtException e){
-            throw new TokenException("토큰이 만료되었습니다.", true);
-        }catch (Exception e) {
-            // 토큰 만료, 서명 불일치, 올바르지 않은 구조 등 모든 검증 실패 시 null 반환
-            throw new TokenException("유효 토큰이 아닙니다.");
+
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new TokenException("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            throw new TokenException("만료된 JWT 토큰입니다.", true);
+        } catch (UnsupportedJwtException e) {
+            throw new TokenException("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new TokenException("JWT 토큰이 잘못되었습니다.");
         }
     }
     public String getSubject(String token){
@@ -120,7 +120,7 @@ public class TokenManager {
     public boolean validateToken(String token) {
         try {
             // 토큰 파싱 시도 (비밀키로 서명 검증 및 만료 시간 확인)
-            Jwts.parser().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             throw new TokenException("잘못된 JWT 서명입니다.");
@@ -135,7 +135,7 @@ public class TokenManager {
     // ----------------------------------------------------------------
     // 2. JWT 토큰에서 Authentication 객체 추출
     // ----------------------------------------------------------------
-    private static final String AUTHORITIES_KEY = "rols";
+    private static final String AUTHORITIES_KEY = "role";
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화하여 내부 Claim 추출
         Claims claims = getToken(accessToken);

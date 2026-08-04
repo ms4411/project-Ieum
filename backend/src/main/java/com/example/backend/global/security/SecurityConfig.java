@@ -18,12 +18,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // REST API 환경에서는 보통 CSRF disable
                 .authorizeHttpRequests(auth -> auth
                         // 특정 경로 인증 없이 허용
-                        .requestMatchers(
-                                "/api/v1/users",
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/signUp"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        //.requestMatchers(
+                        //        "/api/v1/users",
+                        //        "/api/v1/auth/login",
+                        //        "/api/v1/auth/signUp"
+                        //).permitAll()
+                        .anyRequest().permitAll()
+                        //.anyRequest().authenticated()
                 );
 
         return http.build();

@@ -4,6 +4,7 @@ import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,4 +41,14 @@ public class Group {
     @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     User createUser;
+
+    public void changeTitle(String title){
+        this.title=title;
+    }
+    public void changeContent(String content){
+        this.content=content;
+    }
+    public void changeMaxPeople(int maxPeople){
+        this.maxPeople=maxPeople;
+    }
 }

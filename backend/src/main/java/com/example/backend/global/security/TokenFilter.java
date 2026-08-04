@@ -37,9 +37,10 @@ public class TokenFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-
+        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
         // 1. 해더에서 토큰 추출. 없으면 null반환
         String jwt = resolveToken(request);
+
 
         // 2-1 토큰이 존재하고 유효성 검증을 통과한 경우에만 처리합니다.
         if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
@@ -69,7 +70,6 @@ public class TokenFilter extends OncePerRequestFilter {
             // "Bearer " (7자) 이후의 토큰 값만 잘라내어 반환
             return bearerToken.substring(BEARER_PREFIX.length());
         }
-
         return null; // 헤더에 토큰이 없거나 잘못된 형식인 경우 null 반환
     }
 }
