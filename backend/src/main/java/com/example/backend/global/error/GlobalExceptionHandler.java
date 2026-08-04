@@ -1,8 +1,8 @@
 package com.example.backend.global.error;
 
-import com.example.backend.DTO.ResponseOneDTO;
+import com.example.backend.DTO.ResponseDTO;
 import com.example.backend.global.ResponseClass;
-import com.example.backend.global.error.Exception.LoginException;
+import com.example.backend.global.error.Exception.CustomException;
 import com.example.backend.global.error.Exception.TokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +23,12 @@ public class GlobalExceptionHandler {
         return e;
     }
 
-    @ExceptionHandler(LoginException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseOneDTO<String> handleLoginFalse(LoginException e){
-        return responseClass.massageReturn("로그인 실패");
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ResponseDTO.errorRes> handleLoginFalse(CustomException e){
+        return responseClass.errorReturn(
+                e.getErrorCode().getMessage(),
+                e.getErrorCode().getCode()
+        );
     }
 
     // 프로젝트 어디서든 IllegalArgumentException이 throw되면 이 메서드가 낚아챕니다.

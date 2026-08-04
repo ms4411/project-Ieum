@@ -3,7 +3,8 @@ package com.example.backend.domain.auth;
 import com.example.backend.DTO.TokensDTO;
 import com.example.backend.domain.user.User;
 import com.example.backend.domain.user.UserRepository;
-import com.example.backend.global.error.Exception.LoginException;
+import com.example.backend.global.error.Exception.CustomException;
+import com.example.backend.global.error.Exception.ErrorCode;
 import com.example.backend.global.security.TokenManager;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
@@ -23,12 +24,12 @@ public class AuthService {
     private final TokenManager  tokenManager;
 
     public String signUp(String loginId, String name, String pw, String checkPw){
-        if(pw.equals(checkPw)){
-            return "비밀번호가 일치하지 않습니다";
+        if(!pw.equals(checkPw)){
+            throw new CustomException(ErrorCode.PASSWORD_NOT_EQUALS);
         }
         User user = User.builder()
                 .loginId(loginId)
-                .pw(pw)
+                .pw(passwordEncoder.encode(pw))
                 .nickname(name)
                 .build();
         userRepository.save(user);
@@ -36,9 +37,9 @@ public class AuthService {
     }
 
     public TokensDTO signIn(String loginId, String pw){
-        User user = userRepository.findByLoginId(loginId).orElseThrow(LoginException::new);
+        User user = userRepository.findByLoginId(loginId).orElseThrow(()-> new CustomException(ErrorCode.LOGIN_FAILED));
         if(!passwordEncoder.matches(pw, user.getPw())){
-            throw new LoginException();
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
         Map<String, Object> data=new HashMap<>();
         String memberId= user.getId().toString();

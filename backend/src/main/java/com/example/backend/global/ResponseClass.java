@@ -1,24 +1,40 @@
 package com.example.backend.global;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.DTO.ResponseOneDTO;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @Component
 public class ResponseClass {
-    public ResponseDTO<?> successReturn(String message, List<?> data){
-        return new ResponseDTO<>(true, message, data);
+    public ResponseDTO.successRes listReturn(String key, List<?> data){
+        return ResponseDTO.successRes.builder()
+                .data(Map.of(key, data))
+                .build();
     }
 
-    public ResponseOneDTO<String> massageReturn(String massage){
-        return new ResponseOneDTO<String>(true, "메세지 반환", massage);
+    public ResponseDTO.successRes messageReturn(String message){
+        return ResponseDTO.successRes.builder()
+                .data(Map.of("message", message))
+                .build();
+    }
+
+    public ResponseEntity<ResponseDTO.errorRes> errorReturn(String message, HttpStatus code){
+        return ResponseEntity
+            .status(code)
+            .body(
+                ResponseDTO.errorRes.builder()
+                    .message(message)
+                    .code(code)
+                    .build()
+            );
     }
 
     public ResponseEntity<?> responseCookie(String domain, String path, Boolean httpOnly){

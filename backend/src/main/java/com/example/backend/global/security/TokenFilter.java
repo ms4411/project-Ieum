@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils; //스프링의 문자열 유틸리티
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
  * 모든 HTTP 요청마다 한 번씩 실행, 헤더에서 JWT 토큰을 추출·검증하는 필터
  */
 @RequiredArgsConstructor
+@Component
 public class TokenFilter extends OncePerRequestFilter {
 //OncePerRequestFilter  = 각 요청당 한번만
 
@@ -50,7 +52,6 @@ public class TokenFilter extends OncePerRequestFilter {
             // 이 작업을 거치면 해당 요청(Request) 동안 컨트롤러 등에서 로그인된 사용자 정보를 조회할 수 있게 됩니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         // 3. 다음 필터로 요청을 전달
         // 토큰이 없거나 유효하지 않아도 다음 필터로 넘어간 뒤, Spring Security 설정에 따라 접근 거부(401/403) 처리됩니다.
         filterChain.doFilter(request, response);
