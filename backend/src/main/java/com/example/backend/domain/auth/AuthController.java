@@ -1,9 +1,8 @@
 package com.example.backend.domain.auth;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.DTO.SingInDTO;
-import com.example.backend.DTO.SingUpDTO;
-import com.example.backend.DTO.TokensDTO;
+import com.example.backend.DTO.requestDTO.SingInDTO;
+import com.example.backend.DTO.requestDTO.SingUpDTO;
 import com.example.backend.global.ResponseClass;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

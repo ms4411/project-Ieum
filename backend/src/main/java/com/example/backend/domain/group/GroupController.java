@@ -1,10 +1,9 @@
 package com.example.backend.domain.group;
 
-import com.example.backend.DTO.CreateGroupDTO;
+import com.example.backend.DTO.requestDTO.CreateGroupDTO;
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.DTO.UpdateGroupDTO;
+import com.example.backend.DTO.requestDTO.UpdateGroupDTO;
 import com.example.backend.global.ResponseClass;
-import com.example.backend.global.security.TokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;

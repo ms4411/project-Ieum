@@ -1,7 +1,6 @@
 package com.example.backend.domain.user;
 
 import com.example.backend.global.security.TokenManager;
-import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final TokenManager tokenManager;
-    private final RefreshTokenRepository refreshTokenRepository;
 
 
     public List<User> getAllUser(){

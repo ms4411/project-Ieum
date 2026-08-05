@@ -1,6 +1,6 @@
 package com.example.backend.global.security;
 
-import com.example.backend.DTO.TokensDTO;
+import com.example.backend.DTO.responseDTO.TokensDTO;
 import com.example.backend.global.error.Exception.TokenException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;

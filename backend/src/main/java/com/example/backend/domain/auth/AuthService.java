@@ -1,6 +1,6 @@
 package com.example.backend.domain.auth;
 
-import com.example.backend.DTO.TokensDTO;
+import com.example.backend.DTO.responseDTO.TokensDTO;
 import com.example.backend.domain.user.User;
 import com.example.backend.domain.user.UserRepository;
 import com.example.backend.global.error.Exception.CustomException;

@@ -1,7 +1,7 @@
-package com.example.backend.domain.group;
+package com.example.backend.domain.group.repository;
 
+import com.example.backend.domain.group.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;

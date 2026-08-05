@@ -2,6 +2,8 @@ package com.example.backend.domain.group;
 
 import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +40,10 @@ public class Group {
     //참여자
     @Column(nullable = false)
     int maxPeople;
+    @Column(nullable = false)
+    @Min(1)
+    int currentMemberCount=1; //기본적으로 모임장 한명
+
     @OneToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     User createUser;
@@ -50,5 +56,9 @@ public class Group {
     }
     public void changeMaxPeople(int maxPeople){
         this.maxPeople=maxPeople;
+    }
+    public int addPeople(){
+        this.currentMemberCount+=1;
+        return this.currentMemberCount;
     }
 }

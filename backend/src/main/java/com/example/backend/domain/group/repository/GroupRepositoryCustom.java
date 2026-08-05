@@ -1,5 +1,7 @@
-package com.example.backend.domain.group;
+package com.example.backend.domain.group.repository;
 
+import com.example.backend.domain.group.Group;
+import com.example.backend.domain.group.QGroup;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

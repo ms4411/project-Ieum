@@ -1,8 +1,12 @@
 package com.example.backend.domain.group;
 
-import com.example.backend.DTO.CreateGroupDTO;
-import com.example.backend.DTO.TokensDTO;
+import com.example.backend.DTO.requestDTO.CreateGroupDTO;
+import com.example.backend.DTO.responseDTO.TokensDTO;
+import com.example.backend.domain.group.repository.GroupRepository;
+import com.example.backend.domain.group.repository.GroupRepositoryCustom;
 import com.example.backend.domain.user.UserRepository;
+import com.example.backend.global.error.Exception.CustomException;
+import com.example.backend.global.error.Exception.ErrorCode;
 import com.example.backend.global.security.TokenManager;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +56,9 @@ public class GroupService {
 
     //에러처리
     public Group getGroupById(UUID groupId){
-        return groupRepository.findById(groupId).orElseThrow();
+        return groupRepository
+                .findById(groupId)
+                .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND));
     }
 
     public List<Group> searchGroup(
@@ -65,7 +71,9 @@ public class GroupService {
     //에러처리
     public void deleteGroup(UUID groupId){
         groupRepository.delete(
-                groupRepository.findById(groupId).orElseThrow()
+                groupRepository
+                        .findById(groupId)
+                        .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND))
         );
     }
 
