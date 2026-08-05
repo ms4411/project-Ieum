@@ -1,5 +1,6 @@
 package com.example.backend.domain.group;
 
+import com.example.backend.DTO.CreateGroupDTO;
 import com.example.backend.DTO.TokensDTO;
 import com.example.backend.domain.user.UserRepository;
 import com.example.backend.global.security.TokenManager;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,31 +18,26 @@ import java.util.UUID;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final GroupRepositoryCustom groupRepositoryCustom;
     private final UserRepository userRepository;
     private final TokenManager tokenManager;
 
     @Builder(builderMethodName = "createGroupBuilder")
     public Map<String, Object> createGroup(
-            String content,
-            String title,
-            String imgUrl,
-            int maxMemberCnt,
-            int lat,
-            int lng,
-            String address,
-            LocalDateTime meatAt,
-            UUID createUserId
+            CreateGroupDTO groupDTO,
+            String token
     ){
+        UUID createUserId=UUID.fromString(tokenManager.getSubject(token));
         Group group=Group.builder()
-                .title(title)
-                .content(content)
+                .title(groupDTO.title())
+                .content(groupDTO.content())
                 .createUser(userRepository.findById(createUserId).orElseThrow())
-                .lat(lat)
-                .lng(lng)
-                .address(address)
-                .meetAt(meatAt)
-                .maxPeople(maxMemberCnt)
-                .imgUrl(imgUrl)
+                .lat(groupDTO.lat())
+                .lng(groupDTO.lng())
+                .address(groupDTO.address())
+                .meetAt(groupDTO.meatAt())
+                .maxPeople(groupDTO.maxMemberCnt())
+                .imgUrl(groupDTO.imgUrl())
                 .build();
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(
@@ -58,6 +55,13 @@ public class GroupService {
         return groupRepository.findById(groupId).orElseThrow();
     }
 
+    public List<Group> searchGroup(
+            Double swLat, Double swLng,
+            Double neLat, Double neLng,
+            LocalDateTime meetAt
+    ){
+        return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, meetAt);
+    }
     //에러처리
     public void deleteGroup(UUID groupId){
         groupRepository.delete(

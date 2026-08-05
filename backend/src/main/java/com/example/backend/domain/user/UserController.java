@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping()
     public ResponseDTO.successRes getAllUser(){
-        return responseClass.listReturn("유저 목록", userService.getAllUser());
+        return responseClass.listReturn("users", userService.getAllUser());
     }
 
     @GetMapping("/me")

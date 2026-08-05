@@ -31,9 +31,9 @@ public class Group {
     LocalDateTime meetAt;
     //위도 경도
     @Column(nullable = false)
-    int lat;
+    Double lat;
     @Column(nullable = false)
-    int lng;
+    Double lng;
     String address;
     //참여자
     @Column(nullable = false)

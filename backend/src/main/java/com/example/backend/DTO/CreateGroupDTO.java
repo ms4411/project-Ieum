@@ -7,8 +7,8 @@ public record CreateGroupDTO (
         String title,
         String imgUrl,
         int maxMemberCnt,
-        int lat,
-        int lng,
+        Double lat,
+        Double lng,
         String address,
         LocalDateTime meatAt
 ){

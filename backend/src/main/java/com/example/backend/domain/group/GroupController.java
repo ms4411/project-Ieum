@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,21 +20,11 @@ import java.util.UUID;
 public class GroupController {
     private final GroupService groupService;
     private final ResponseClass responseClass;
-    private final TokenManager tokenManager;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO.successRes createGroup(@RequestHeader("Authorization") String token, @RequestBody CreateGroupDTO createGroupDTO){
-        Map<String,Object> data= groupService.createGroupBuilder()
-                .createUserId(UUID.fromString(tokenManager.getSubject(token)))
-                .content(createGroupDTO.content())
-                .title(createGroupDTO.title())
-                .lng(createGroupDTO.lng())
-                .lat(createGroupDTO.lat())
-                .address(createGroupDTO.address())
-                .maxMemberCnt(createGroupDTO.maxMemberCnt())
-                .meatAt(createGroupDTO.meatAt())
-                .imgUrl(createGroupDTO.imgUrl())
-                .build();
+        Map<String,Object> data= groupService.createGroup(createGroupDTO, token);
         return ResponseDTO.successRes.builder()
                 .data(data)
                 .build();
@@ -44,6 +35,15 @@ public class GroupController {
         return ResponseDTO.successRes.builder()
                 .data(Map.of("group", group))
                 .build();
+    }
+
+    @GetMapping
+    public ResponseDTO.successRes searchGroup(
+            @RequestParam Double swLat,@RequestParam Double swLng,
+            @RequestParam Double neLat,@RequestParam Double neLng,
+            @RequestParam LocalDateTime meetAt
+    ){
+        return responseClass.listReturn("groups", groupService.searchGroup(swLat,swLng,neLat,neLng,meetAt));
     }
 
     @PreAuthorize("hasRole('HOST')")
