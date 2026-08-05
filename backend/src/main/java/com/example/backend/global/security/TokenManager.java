@@ -44,15 +44,16 @@ public class TokenManager {
         if (id==null || id.isEmpty()){
             id= UUID.randomUUID().toString();
         }
-        tokenContent.computeIfPresent("role", (k, v) -> v + ",ROLE_LOGIN");
-        if (!tokenContent.containsKey("role")) {
-            tokenContent.put("role","ROLE_LOGIN");
+        Map<String, Object> data=new HashMap<>(tokenContent);
+        data.computeIfPresent("role", (k, v) -> v + ",ROLE_LOGIN");
+        if (!data.containsKey("role")) {
+            data.put("role","ROLE_LOGIN");
         }
         return Jwts.builder() //토큰 발행
                 .subject(id)
                 .issuedAt(now)
                 .expiration(expirationTime)
-                .claims(tokenContent)
+                .claims(data)
                 .signWith(SECRET_KEY)
                 .compact();
 
