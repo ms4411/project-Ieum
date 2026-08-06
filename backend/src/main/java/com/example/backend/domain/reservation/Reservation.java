@@ -33,6 +33,7 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     ReservationStatus status=ReservationStatus.PENDING;
 
+    String message;
     LocalDateTime requestedAt=LocalDateTime.now();
     LocalDateTime respondedAt=null;
 
