@@ -20,12 +20,14 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true, rollbackFor = CustomException.class, timeout = 60) //1분 이상 소요시 자동 롤백
 public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupRepositoryCustom groupRepositoryCustom;
     private final UserRepository userRepository;
     private final TokenManager tokenManager;
 
+    @Transactional
     @Builder(builderMethodName = "createGroupBuilder")
     public Map<String, Object> createGroup(
             CreateGroupDTO groupDTO,
@@ -54,7 +56,6 @@ public class GroupService {
         );
     }
 
-    //에러처리
     public Group getGroupById(UUID groupId){
         return groupRepository
                 .findById(groupId)
@@ -68,7 +69,8 @@ public class GroupService {
     ){
         return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, meetAt);
     }
-    //에러처리
+
+    @Transactional
     public void deleteGroup(UUID groupId){
         groupRepository.delete(
                 groupRepository
@@ -77,7 +79,7 @@ public class GroupService {
         );
     }
 
-    @Transactional
+    @Transactional()
     public void updateGroup(
             UUID groupId,
             String title,
@@ -85,9 +87,11 @@ public class GroupService {
             int maxMember
     ){
         Group group=groupRepository.findById(groupId).orElseThrow();
-
+        int updateCnt=groupRepository.changeMaxPeople(groupId, maxMember);
+        if(updateCnt==0){
+            throw new CustomException(ErrorCode.SMALL_CURRENT_THEN_MAX);
+        }
         group.changeTitle(title);
         group.changeContent(content);
-        group.changeMaxPeople(maxMember); //무결성 주의. 나중에 수정해야됨
     }
 }

@@ -13,6 +13,7 @@ public enum ErrorCode {
     ALREADY_MEMBER("이미 참여된 모임",HttpStatus.CONFLICT),
     RESERVATION_NOT_FOUND("해당하는 신청 없음", HttpStatus.NOT_FOUND),
     INVALID_REQUEST("유효하지 않은 요청", HttpStatus.CONFLICT),
+    SMALL_CURRENT_THEN_MAX("현재 참여한 사람보다 더 최대참여자를 적게 설정함",HttpStatus.CONFLICT),
     ALREADY_PROCESSED("이미 처리된 요청", HttpStatus.CONFLICT),
 
     GROUP_NOT_FOUND("해당하는 그룹이 없음", HttpStatus.NOT_FOUND),
