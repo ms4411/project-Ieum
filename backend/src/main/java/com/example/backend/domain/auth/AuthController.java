@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseDTO.successRes logout(@Header("Authorization") String token){
+    public ResponseDTO.successRes logout(@RequestHeader("Authorization") String token){
         return responseClass.messageReturn(authService.logout(token));
     }
 }
