@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class ReservationController {
     private final ReservationService reservationService;
     private final ResponseClass responseClass;
@@ -64,7 +65,7 @@ public class ReservationController {
         reservationService.changeStatus(groupId, reservationId, dto);
     }
 
-    @GetMapping("/users/me/join-requests?")
+    @GetMapping("/users/me/join-requests")
     public List<Reservation> getAllMyReservation(
             @RequestHeader("Authorization") String token,
             @RequestParam ReservationStatus status
