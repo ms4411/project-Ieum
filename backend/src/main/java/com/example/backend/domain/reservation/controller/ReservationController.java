@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.backend.domain.reservation.controller.dto.request.UpdateStatusReservationDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -70,7 +69,6 @@ public class ReservationController {
             @RequestHeader("Authorization") String token,
             @RequestParam ReservationStatus status
     ){
-        //이어서 하기
-        return new  ArrayList();
+        return reservationService.getMyReservationByStatus(token, status);
     }
 }
