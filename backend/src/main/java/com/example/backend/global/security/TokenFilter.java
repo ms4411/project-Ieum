@@ -37,7 +37,6 @@ public class TokenFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
         // 1. 해더에서 토큰 추출. 없으면 null반환
         String jwt = resolveToken(request);
 

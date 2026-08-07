@@ -37,6 +37,7 @@ public class GroupService {
     ){
         UUID createUserId=UUID.fromString(tokenManager.getSubject(token));
         Group group=Group.builder()
+                .id(UUID.randomUUID())
                 .title(groupDTO.title())
                 .content(groupDTO.content())
                 .createUser(userRepository.findById(createUserId).orElseThrow())
@@ -46,6 +47,7 @@ public class GroupService {
                 .meetAt(groupDTO.meatAt())
                 .maxPeople(groupDTO.maxMemberCnt())
                 .imgUrl(groupDTO.imgUrl())
+                .currentMemberCount(1)
                 .build();
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(
@@ -84,11 +86,7 @@ public class GroupService {
         if(!group.getCreateUser().getId().equals(UUID.fromString(tokenManager.getSubject(token)))){
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
-        groupRepository.delete(
-                groupRepository
-                        .findById(groupId)
-                        .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND))
-        );
+        groupRepository.delete(group);
     }
 
     @Transactional()

@@ -46,9 +46,9 @@ public class ReservationService {
             Reservation tempReservation=reservationRepository
                     .findByUserAndGroup(user,group)
                     .orElseThrow(()->new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
-            if(tempReservation.status==ReservationStatus.PENDING){
+            if(tempReservation.getStatus()==ReservationStatus.PENDING){
                 throw new CustomException(ErrorCode.ALREADY_REQUESTED);
-            } else if (tempReservation.status==ReservationStatus.APPROVED) {
+            } else if (tempReservation.getStatus()==ReservationStatus.APPROVED) {
                 throw new CustomException(ErrorCode.ALREADY_MEMBER);
 
             }
@@ -74,7 +74,7 @@ public class ReservationService {
                         groupId
                 )
                 .orElseThrow(()->new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
-        if(reservation.status==ReservationStatus.PENDING){
+        if(reservation.getStatus()==ReservationStatus.PENDING){
             reservationRepository.delete(reservation);
         }
         else{
@@ -98,7 +98,7 @@ public class ReservationService {
 
         if (group.getCurrentMemberCount()>=group.getMaxPeople() && dto.status().equals(ReservationStatus.APPROVED)){
             throw new CustomException(ErrorCode.GROUP_FULL);
-        }else if(reservation.status!=ReservationStatus.PENDING){
+        }else if(reservation.getStatus()!=ReservationStatus.PENDING){
             throw new CustomException(ErrorCode.ALREADY_PROCESSED);
         }
         reservation.changeStatus(dto.status());
@@ -123,9 +123,9 @@ public class ReservationService {
         List<Reservation> list=reservationRepository.findAllByGroup_IdAndStatus(groupId, status);
         return list.stream()
                 .map(temp -> ReadGroupMembersDTO.builder()
-                        .joinAt(temp.requestedAt)
-                        .userNickname(temp.userNickname)
-                        .userId(temp.user.getId())
+                        .joinAt(temp.getRequestedAt())
+                        .userNickname(temp.getUserNickname())
+                        .userId(temp.getUser().getId())
                         .build()
                 )
                 .toList();
@@ -138,7 +138,7 @@ public class ReservationService {
                         UUID.fromString(tokenManager.getSubject(token)),
                         groupId
                 ).orElseThrow(()->new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
-        if(reservation.status!=ReservationStatus.APPROVED){
+        if(reservation.getStatus()!=ReservationStatus.APPROVED){
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
         return getAllGroupMembersByStatus(groupId, ReservationStatus.APPROVED);
@@ -163,11 +163,11 @@ public class ReservationService {
                         .content(reservation.getGroup().getContent())
                         .role(reservation.getRole())
                         .members(
-                                reservationRepository.findAllByGroup_IdAndStatus(reservation.group.getId(), ReservationStatus.APPROVED).stream()
+                                reservationRepository.findAllByGroup_IdAndStatus(reservation.getGroup().getId(), ReservationStatus.APPROVED).stream()
                                         .map(temp -> ReadGroupMembersDTO.builder()
-                                                .joinAt(temp.requestedAt)
-                                                .userNickname(temp.userNickname)
-                                                .userId(temp.user.getId())
+                                                .joinAt(temp.getRequestedAt())
+                                                .userNickname(temp.getUserNickname())
+                                                .userId(temp.getUser().getId())
                                                 .build()
                                         )
                                         .toList()

@@ -23,31 +23,32 @@ import java.util.UUID;
 @Table(name="club")
 public class Group {
     @Id
-    final UUID id=UUID.randomUUID();
+    @Column(updatable = false)
+    private UUID id;
     @Column(nullable = false)
-    String title;
+    private String title;
     @Column(nullable = false)
-    String content;
-    String imgUrl;
+    private String content;
+    private String imgUrl;
     @Column(nullable = false)
-    LocalDateTime meetAt;
+    private LocalDateTime meetAt;
     //위도 경도
     @Column(nullable = false)
-    Double lat;
+    private Double lat;
     @Column(nullable = false)
-    Double lng;
-    String address;
+    private Double lng;
+    private String address;
     //참여자
     @Column(nullable = false)
     @Min(2)
-    int maxPeople;
+    private int maxPeople;
     @Column(nullable = false)
     @Min(1)
-    int currentMemberCount=1; //기본적으로 모임장 한명
+    private int currentMemberCount;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User createUser;
+    private User createUser;
 
     public void changeTitle(String title){
         this.title=title;

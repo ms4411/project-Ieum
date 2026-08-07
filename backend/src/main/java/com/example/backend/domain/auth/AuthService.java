@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class AuthService {
             throw new CustomException(ErrorCode.PASSWORD_NOT_EQUALS);
         }
         User user = User.builder()
+                .id(UUID.randomUUID())
                 .loginId(loginId)
                 .pw(passwordEncoder.encode(pw))
                 .nickname(name)
@@ -67,13 +70,15 @@ public class AuthService {
         ) {
             throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
+        Object role=tokenManager
+                .expiredTokenGetPayload(dto.getAcceptToken())
+                .get("role");
+        Object createGroupId=tokenManager
+                .expiredTokenGetPayload(dto.getAcceptToken())
+                .get("createGroupId");
         return tokenManager.createTokens(sub, Map.of(
-                "role", tokenManager
-                        .expiredTokenGetPayload(dto.getAcceptToken())
-                        .get("role"),
-                "createGroupId", tokenManager
-                        .expiredTokenGetPayload(dto.getAcceptToken())
-                        .get("createGroupId")
+                "role", role!=null? role: "",
+                "createGroupId", createGroupId!=null? createGroupId: UUID.randomUUID()
 
         ));
     }

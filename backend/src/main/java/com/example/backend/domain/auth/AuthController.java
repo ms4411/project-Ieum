@@ -1,8 +1,8 @@
 package com.example.backend.domain.auth;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.DTO.requestDTO.SingInDTO;
-import com.example.backend.DTO.requestDTO.SingUpDTO;
+import com.example.backend.DTO.requestDTO.SignInDTO;
+import com.example.backend.DTO.requestDTO.SignUpDTO;
 import com.example.backend.DTO.responseDTO.TokensDTO;
 import com.example.backend.global.ResponseClass;
 import com.example.backend.global.error.Exception.CustomException;
@@ -24,11 +24,11 @@ public class AuthController {
 
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO.successRes singUp(@Valid @RequestBody SingUpDTO singUpDTO){
+    public ResponseDTO.successRes singUp(@Valid @RequestBody SignUpDTO signUpDTO){
         try {
             return responseClass.messageReturn(
                     authService.signUp(
-                            singUpDTO.getLoginId(), singUpDTO.getNickname(), singUpDTO.getPw(), singUpDTO.getCheckPw()
+                            signUpDTO.getLoginId(), signUpDTO.getNickname(), signUpDTO.getPw(), signUpDTO.getCheckPw()
                     )
             );
         } catch (DataIntegrityViolationException e) {
@@ -38,18 +38,16 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO.successRes signUp(@Valid @RequestBody SingInDTO singInDTO){
+    public ResponseDTO.successRes signIn(@Valid @RequestBody SignInDTO signInDTO){
         return ResponseDTO.successRes.builder()
-                .data(
-                        Map.of(
-                                "tokens",
-                                authService.signIn(
-                                        singInDTO.getLoginId(),
-                                        singInDTO.getPw()
-                                )
-                        )
-                )
-                .build();
+            .data(Map.of(
+                    "tokens",
+                    authService.signIn(
+                        signInDTO.getLoginId(),
+                        signInDTO.getPw()
+                    )
+            ))
+            .build();
     }
 
     @PostMapping("/logout")

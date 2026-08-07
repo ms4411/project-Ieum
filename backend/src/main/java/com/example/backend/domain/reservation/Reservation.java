@@ -20,26 +20,28 @@ import java.time.LocalDateTime;
 public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    Long id;
+    private Long id;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Group group;
+    private Group group;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User user;
-    String userNickname;
+    private User user;
+    private String userNickname;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    User host;
+    private User host;
     @Enumerated(EnumType.STRING)
-    ReservationStatus status=ReservationStatus.PENDING;
+    private ReservationStatus status=ReservationStatus.PENDING;
     @Enumerated(EnumType.STRING)
-    RoleEnum role;
+    private RoleEnum role;
 
-    String message;
-    LocalDateTime requestedAt=LocalDateTime.now();
-    LocalDateTime respondedAt=null;
+    private String message;
+    @Builder.Default
+    private LocalDateTime requestedAt=LocalDateTime.now();
+    @Builder.Default
+    private LocalDateTime respondedAt=null;
 
     public void responded(){
         this.respondedAt=LocalDateTime.now();
