@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +52,29 @@ public class AuthService {
         RefreshToken refreshToken=refreshTokenRepository.findById(sub).orElseThrow();
         refreshTokenRepository.delete(refreshToken);
         return "로그아웃 성공";
+    }
+
+    public TokensDTO refresh(
+            TokensDTO dto
+    ){
+        String sub=tokenManager.getSubject(dto.getRefreshToken());
+        RefreshToken refreshToken=refreshTokenRepository
+                .findById(sub)
+                .orElseThrow(()->new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+        if(!MessageDigest.isEqual(
+                refreshToken.getToken().getBytes(),
+                tokenManager.hashToken(dto.getRefreshToken()).getBytes())
+        ) {
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
+        }
+        return tokenManager.createTokens(sub, Map.of(
+                "role", tokenManager
+                        .expiredTokenGetPayload(dto.getAcceptToken())
+                        .get("role"),
+                "createGroupId", tokenManager
+                        .expiredTokenGetPayload(dto.getAcceptToken())
+                        .get("createGroupId")
+
+        ));
     }
 }

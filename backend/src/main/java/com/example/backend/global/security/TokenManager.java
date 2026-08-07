@@ -1,6 +1,8 @@
 package com.example.backend.global.security;
 
 import com.example.backend.DTO.responseDTO.TokensDTO;
+import com.example.backend.global.error.Exception.CustomException;
+import com.example.backend.global.error.Exception.ErrorCode;
 import com.example.backend.global.error.Exception.TokenException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
@@ -12,10 +14,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +41,22 @@ public class TokenManager {
         this.SECRET_KEY_STRING=tokenProperties.secretKey();
         this.SECRET_KEY = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8)); //암호화
         this.refreshTokenRepository=refreshTokenRepository;
+    }
+
+
+    public String hashToken(String refreshToken) {
+        try {
+            //자바 scanner 해싱 버전
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            //utf-8방식으로 byte[]배열 얻은 것으로 해싱
+            byte[] hash = digest.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
+
+            // Byte 배열을 16진수 문자열로 변환
+            // byte[]를 char[]로 변환 후 String 생성
+            return new String(Hex.encode(hash));
+        }catch (NoSuchAlgorithmException e){
+            throw new CustomException(ErrorCode.NO_SUCH_ALGORITHM);
+        }
     }
 
     private String createAcceptToken(String id, Map<String, Object> tokenContent){
@@ -70,7 +91,7 @@ public class TokenManager {
         refreshTokenRepository.save(
                 RefreshToken.builder()
                         .sub(id)
-                        .token(refreshToken)
+                        .token(hashToken(refreshToken))
                         .expiredDate(expirationTime)
                         .build()
         );
@@ -109,9 +130,37 @@ public class TokenManager {
             throw new TokenException("JWT 토큰이 잘못되었습니다.");
         }
     }
+
+    public Claims expiredTokenGetPayload(String token){
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        try {
+            return Jwts.parser()
+                    .verifyWith(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
+
     public String getSubject(String token){
         Claims payload=getToken(token);
         return payload.getSubject();
+    }
+    public UUID getCreatGroupId(String token){
+        Claims payload=getToken(token);
+        if (!(payload.containsKey("createGroupId"))){
+            return null;
+        }
+        return UUID.fromString(
+                String.valueOf(
+                        payload.get("createGroupId")
+                )
+        );
     }
     //---------------------------------------------filter를 위한 메서드
 

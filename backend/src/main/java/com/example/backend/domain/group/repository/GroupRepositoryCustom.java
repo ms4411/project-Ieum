@@ -17,6 +17,7 @@ public class GroupRepositoryCustom {
     public List<Group> searchGroup(
             Double swLat, Double swLng,
             Double neLat, Double neLng,
+            String keyword,
             LocalDateTime meetAt
     ){
         QGroup group=QGroup.group;
@@ -25,6 +26,7 @@ public class GroupRepositoryCustom {
                 .where(
                         group.lat.between(swLat, neLat),
                         group.lng.between(swLng, neLng),
+                        keyword!=null ? group.title.contains(keyword): null,
                         meetAt != null ? group.meetAt.between(meetAt, meetAt.plusHours(1)) : null
                 )
                 .fetch();

@@ -5,6 +5,7 @@ import com.example.backend.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -32,12 +34,20 @@ public class Reservation {
     User host;
     @Enumerated(EnumType.STRING)
     ReservationStatus status=ReservationStatus.PENDING;
+    @Enumerated(EnumType.STRING)
+    RoleEnum role;
 
     String message;
     LocalDateTime requestedAt=LocalDateTime.now();
     LocalDateTime respondedAt=null;
 
+    public void responded(){
+        this.respondedAt=LocalDateTime.now();
+    }
     public void changeStatus(ReservationStatus status){
         this.status=status;
+        if (this.status!=ReservationStatus.PENDING) {
+            responded();
+        }
     }
 }

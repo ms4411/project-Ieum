@@ -3,11 +3,14 @@ package com.example.backend.domain.auth;
 import com.example.backend.DTO.ResponseDTO;
 import com.example.backend.DTO.requestDTO.SingInDTO;
 import com.example.backend.DTO.requestDTO.SingUpDTO;
+import com.example.backend.DTO.responseDTO.TokensDTO;
 import com.example.backend.global.ResponseClass;
+import com.example.backend.global.error.Exception.CustomException;
+import com.example.backend.global.error.Exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,11 +25,15 @@ public class AuthController {
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO.successRes singUp(@Valid @RequestBody SingUpDTO singUpDTO){
-        return responseClass.messageReturn(
-                authService.signUp(
-                        singUpDTO.getLoginId(), singUpDTO.getNickname(), singUpDTO.getPw(), singUpDTO.getCheckPw()
-                )
-        );
+        try {
+            return responseClass.messageReturn(
+                    authService.signUp(
+                            singUpDTO.getLoginId(), singUpDTO.getNickname(), singUpDTO.getPw(), singUpDTO.getCheckPw()
+                    )
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(ErrorCode.LOGIN_ID_OVERLAP);
+        }
     }
 
     @PostMapping("/login")
@@ -48,5 +55,12 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseDTO.successRes logout(@RequestHeader("Authorization") String token){
         return responseClass.messageReturn(authService.logout(token));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseDTO.successRes refresh(@RequestBody TokensDTO dto){
+        return ResponseDTO.successRes.builder()
+                .data(Map.of("tokens",authService.refresh(dto)))
+                .build();
     }
 }

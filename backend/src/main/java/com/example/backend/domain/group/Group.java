@@ -39,12 +39,13 @@ public class Group {
     String address;
     //참여자
     @Column(nullable = false)
+    @Min(2)
     int maxPeople;
     @Column(nullable = false)
     @Min(1)
     int currentMemberCount=1; //기본적으로 모임장 한명
 
-    @OneToOne
+    @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     User createUser;
 
@@ -57,8 +58,13 @@ public class Group {
     public void changeMaxPeople(int maxPeople){
         this.maxPeople=maxPeople;
     }
+
     public int addPeople(){
         this.currentMemberCount+=1;
+        return this.currentMemberCount;
+    }
+    public int minersPeople(){
+        this.currentMemberCount-=1;
         return this.currentMemberCount;
     }
 }

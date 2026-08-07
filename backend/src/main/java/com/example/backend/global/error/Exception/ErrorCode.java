@@ -7,6 +7,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    FORBIDDEN("권한이 없음", HttpStatus.FORBIDDEN),
+
+    REFRESH_TOKEN_NOT_FOUND("refresh 토큰이 존재하지 않음", HttpStatus.NOT_FOUND),
+    NO_SUCH_ALGORITHM("지원하지 않는 암호화 알고리즘", HttpStatus.NOT_FOUND),
+
     HOST_CANNOT_REQUEST("모임장은 자신의 모임에 참여 신청이 불가", HttpStatus.FORBIDDEN),
     GROUP_FULL("정원이 가득 참", HttpStatus.CONFLICT),
     ALREADY_REQUESTED("이미 신청한 모임",HttpStatus.CONFLICT),

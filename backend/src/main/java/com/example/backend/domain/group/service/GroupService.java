@@ -1,7 +1,9 @@
-package com.example.backend.domain.group;
+package com.example.backend.domain.group.service;
 
 import com.example.backend.DTO.requestDTO.CreateGroupDTO;
+import com.example.backend.DTO.requestDTO.UpdateGroupDTO;
 import com.example.backend.DTO.responseDTO.TokensDTO;
+import com.example.backend.domain.group.Group;
 import com.example.backend.domain.group.repository.GroupRepository;
 import com.example.backend.domain.group.repository.GroupRepositoryCustom;
 import com.example.backend.domain.user.UserRepository;
@@ -48,7 +50,7 @@ public class GroupService {
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(
                 createUserId.toString(),
-                Map.of("role", "ROLE_HOST")
+                Map.of("role", "ROLE_HOST","createGroupId",group.getId())
         );
         return Map.of(
                 "tokens",tokens,
@@ -65,13 +67,23 @@ public class GroupService {
     public List<Group> searchGroup(
             Double swLat, Double swLng,
             Double neLat, Double neLng,
+            String keyword,
             LocalDateTime meetAt
     ){
-        return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, meetAt);
+        return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, keyword, meetAt);
     }
 
     @Transactional
-    public void deleteGroup(UUID groupId){
+    public void deleteGroup(
+            UUID groupId,
+            String token
+    ){
+        Group group=groupRepository
+                .findById(groupId)
+                .orElseThrow(()-> new CustomException(ErrorCode.GROUP_NOT_FOUND));
+        if(!group.getCreateUser().getId().equals(UUID.fromString(tokenManager.getSubject(token)))){
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
         groupRepository.delete(
                 groupRepository
                         .findById(groupId)
@@ -82,16 +94,20 @@ public class GroupService {
     @Transactional()
     public void updateGroup(
             UUID groupId,
-            String title,
-            String content,
-            int maxMember
+            UpdateGroupDTO dto,
+            String token
     ){
-        Group group=groupRepository.findById(groupId).orElseThrow();
-        int updateCnt=groupRepository.changeMaxPeople(groupId, maxMember);
+        Group group=groupRepository
+                .findById(groupId)
+                .orElseThrow(()-> new CustomException(ErrorCode.GROUP_NOT_FOUND));
+        if(!group.getCreateUser().getId().equals(UUID.fromString(tokenManager.getSubject(token)))){
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+        int updateCnt=groupRepository.changeMaxPeople(groupId, dto.maxMember());
         if(updateCnt==0){
             throw new CustomException(ErrorCode.SMALL_CURRENT_THEN_MAX);
         }
-        group.changeTitle(title);
-        group.changeContent(content);
+        group.changeTitle(dto.title());
+        group.changeContent(dto.content());
     }
 }

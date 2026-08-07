@@ -1,5 +1,6 @@
 package com.example.backend.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,6 +32,7 @@ public class User {
 
     @Column(nullable = false)
     @Size(min = 8, message = "최소 8글자 이상 입력")
+    @JsonIgnore
     private String pw;
 
     public void changeNickname(String nickname){
