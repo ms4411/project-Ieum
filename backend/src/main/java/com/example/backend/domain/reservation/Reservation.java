@@ -33,6 +33,7 @@ public class Reservation {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User host;
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private ReservationStatus status=ReservationStatus.PENDING;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;

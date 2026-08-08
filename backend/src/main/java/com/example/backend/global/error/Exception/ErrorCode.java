@@ -8,7 +8,12 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
     FORBIDDEN("권한이 없음", HttpStatus.FORBIDDEN),
+    BAD_REQUEST("올바르지 않은 요청", HttpStatus.BAD_REQUEST),
 
+    WRONG_TOKEN("JWT 토큰이 잘못됨", HttpStatus.UNAUTHORIZED),
+    UNSUPPORTED("지원하지 않는 토큰 형식", HttpStatus.UNAUTHORIZED),
+    SIGNATURE_EXCEPTION("잘못된 JWT 서명", HttpStatus.UNAUTHORIZED),
+    EXPIRED_TOKEN("만료된 토큰", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_NOT_FOUND("refresh 토큰이 존재하지 않음", HttpStatus.NOT_FOUND),
     NO_SUCH_ALGORITHM("지원하지 않는 암호화 알고리즘", HttpStatus.NOT_FOUND),
 

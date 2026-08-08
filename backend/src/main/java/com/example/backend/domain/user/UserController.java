@@ -27,7 +27,6 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseDTO.successRes getMe(@RequestHeader("Authorization") String token){
-        System.out.println(token);
         String sub = tokenManager.getSubject(token);
         return ResponseDTO.successRes.builder()
                 .data(Map.of("myData",userService.getById(UUID.fromString(sub))))

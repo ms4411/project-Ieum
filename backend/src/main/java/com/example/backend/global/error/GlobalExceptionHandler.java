@@ -3,12 +3,10 @@ package com.example.backend.global.error;
 import com.example.backend.DTO.ResponseDTO;
 import com.example.backend.global.ResponseClass;
 import com.example.backend.global.error.Exception.CustomException;
-import com.example.backend.global.error.Exception.TokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
@@ -16,12 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     final private ResponseClass responseClass;
-
-    @ExceptionHandler(TokenException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public TokenException handleToken(TokenException e){
-        return e;
-    }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseDTO.errorRes> handleLoginFalse(CustomException e){

@@ -3,7 +3,6 @@ package com.example.backend.global.security;
 import com.example.backend.DTO.responseDTO.TokensDTO;
 import com.example.backend.global.error.Exception.CustomException;
 import com.example.backend.global.error.Exception.ErrorCode;
-import com.example.backend.global.error.Exception.TokenException;
 import com.example.backend.global.security.refreshToken.RefreshToken;
 import com.example.backend.global.security.refreshToken.RefreshTokenRepository;
 import io.jsonwebtoken.*;
@@ -109,6 +108,8 @@ public class TokenManager {
             // Bearer 접두사 제거
             if (token != null && token.startsWith("Bearer ")) {
                 token = token.substring(7);
+            }else{
+                throw new CustomException(ErrorCode.BAD_REQUEST);
             }
             // 토큰 서명을 검증하고 내부 데이터(Claims)를 파싱
             // 만료되었거나 누군가 1글자라도 위조했다면 예외(Exception)가 발생.
@@ -121,13 +122,13 @@ public class TokenManager {
 
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            throw new TokenException("잘못된 JWT 서명입니다.");
+            throw new CustomException(ErrorCode.SIGNATURE_EXCEPTION);
         } catch (ExpiredJwtException e) {
-            throw new TokenException("만료된 JWT 토큰입니다.", true);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new TokenException("지원되지 않는 JWT 토큰입니다.");
+            throw new CustomException(ErrorCode.UNSUPPORTED);
         } catch (IllegalArgumentException e) {
-            throw new TokenException("JWT 토큰이 잘못되었습니다.");
+            throw new CustomException(ErrorCode.WRONG_TOKEN);
         }
     }
 
@@ -173,13 +174,13 @@ public class TokenManager {
             Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            throw new TokenException("잘못된 JWT 서명입니다.");
+            throw new CustomException(ErrorCode.SIGNATURE_EXCEPTION);
         } catch (ExpiredJwtException e) {
-            throw new TokenException("만료된 JWT 토큰입니다.", true);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new TokenException("지원되지 않는 JWT 토큰입니다.");
+            throw new CustomException(ErrorCode.UNSUPPORTED);
         } catch (IllegalArgumentException e) {
-            throw new TokenException("JWT 토큰이 잘못되었습니다.");
+            throw new CustomException(ErrorCode.WRONG_TOKEN);
         }
     }
     // ----------------------------------------------------------------
