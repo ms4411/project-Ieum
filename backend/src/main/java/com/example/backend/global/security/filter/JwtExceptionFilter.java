@@ -1,10 +1,7 @@
 package com.example.backend.global.security.filter;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.global.error.Exception.ErrorCode;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import com.example.backend.global.error.Exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,20 +26,14 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     )throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            SetErrorResponse(response, ErrorCode.SIGNATURE_EXCEPTION);
-        } catch (ExpiredJwtException e) {
-            SetErrorResponse(response, ErrorCode.EXPIRED_TOKEN);
-        } catch (UnsupportedJwtException e) {
-            SetErrorResponse(response, ErrorCode.UNSUPPORTED);
-        } catch (IllegalArgumentException e) {
-            SetErrorResponse(response, ErrorCode.WRONG_TOKEN);
+        } catch (CustomException e) {
+            SetErrorResponse(response, e);
         }
     }
-    private void SetErrorResponse(HttpServletResponse response, ErrorCode code) throws IOException{
+    private void SetErrorResponse(HttpServletResponse response, CustomException e) throws IOException{
         ResponseDTO.errorRes errorResponse=ResponseDTO.errorRes.builder()
-                .code(code.getCode())
-                .message(code.getMessage())
+                .code(e.getErrorCode().getCode())
+                .message(e.getErrorCode().getMessage())
                 .build();
         objectMapper.writeValue(response.getWriter(), errorResponse);
     }
