@@ -1,5 +1,6 @@
-package com.example.backend.global.security;
+package com.example.backend.global.security.filter;
 
+import com.example.backend.global.security.TokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

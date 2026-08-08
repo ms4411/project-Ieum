@@ -1,7 +1,6 @@
-package com.example.backend.global.security;
+package com.example.backend.global.security.filter;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.global.ResponseClass;
 import com.example.backend.global.error.Exception.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

@@ -47,7 +47,6 @@ public class GroupService {
                 .meetAt(groupDTO.meatAt())
                 .maxPeople(groupDTO.maxMemberCnt())
                 .imgUrl(groupDTO.imgUrl())
-                .currentMemberCount(1)
                 .build();
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(

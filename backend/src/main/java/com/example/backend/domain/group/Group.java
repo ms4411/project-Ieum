@@ -44,7 +44,8 @@ public class Group {
     private int maxPeople;
     @Column(nullable = false)
     @Min(1)
-    private int currentMemberCount;
+    @Builder.Default
+    private int currentMemberCount=1;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
