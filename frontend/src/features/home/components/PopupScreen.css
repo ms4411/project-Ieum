@@ -46,6 +46,11 @@
     align-items: stretch;
     gap: 10px;
 }
+.popup-datetime-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
 textarea{
     overflow: hidden;
 }

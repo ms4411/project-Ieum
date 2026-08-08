@@ -1,63 +1,49 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { getMapBounds, addMapIdleListener } from '../../../infrastructure/kakao/kakaoMap';
+import { searchGroups } from '../../groups/api/groupsApi';
 
-// TODO: 실제 "주변 모임" 조회 API 연동 전까지 사용하는 임시(mock) 데이터.
-// 화면에 보이는 범위만 걸러내야 하므로 각 모임은 좌표(lat/lng)를 갖고 있어야 한다.
-const MOCK_ALL_GROUPS = [
-  {
-    id: 'group-1',
-    name: 'wls이네 집',
-    content: '집',
-    imgUrl: '/favicon.svg',
-    lat: 37.5665,
-    lng: 126.978,
-  },
-  {
-    id: 'group-2',
-    name: '연남동 보드게임 모임',
-    content: '가볍게 보드게임 한 판 하실 분 구해요',
-    imgUrl: '/favicon.svg',
-    lat: 37.5663,
-    lng: 126.9254,
-  },
-  {
-    id: 'group-3',
-    name: '해운대 러닝 크루',
-    content: '부산 해운대 바닷가에서 같이 뛰어요',
-    imgUrl: '/favicon.svg',
-    lat: 35.1587,
-    lng: 129.1604,
-  },
-];
+// 지도가 지금 보여주고 있는 범위(뷰포트) 안에 있는 모임만 서버에서 조회한다.
+// 지도를 움직이거나 확대/축소해서 멈출 때(idle)마다 다시 조회하고,
+// keyword/meetAt(검색어·날짜 필터)이 바뀔 때도 다시 조회한다.
+export function useNearbyGroups(map, { keyword, meetAt } = {}) {
+  const [groups, setGroups] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // 응답이 요청 순서와 다르게 도착해 옛 결과로 최신 결과를 덮어쓰는 것을 막는다.
+  const requestIdRef = useRef(0);
 
-function isWithinBounds(bounds, position) {
-  return (
-    position.lat >= bounds.sw.lat &&
-    position.lat <= bounds.ne.lat &&
-    position.lng >= bounds.sw.lng &&
-    position.lng <= bounds.ne.lng
-  );
-}
-
-// 지도가 지금 보여주고 있는 범위(뷰포트) 안에 있는 모임만 걸러서 반환한다.
-// 지도를 움직이거나 확대/축소해서 멈출 때(idle)마다 다시 계산한다.
-export function useNearbyGroups(map) {
-  const [nearbyGroups, setNearbyGroups] = useState([]);
-
-  const updateNearbyGroups = useCallback(() => {
+  const fetchGroups = useCallback(async () => {
     if (!map) return;
     const bounds = getMapBounds(map);
-    setNearbyGroups(MOCK_ALL_GROUPS.filter((group) => isWithinBounds(bounds, group)));
-  }, [map]);
+    const requestId = ++requestIdRef.current;
+
+    setIsLoading(true);
+    try {
+      const result = await searchGroups({
+        swLat: bounds.sw.lat,
+        swLng: bounds.sw.lng,
+        neLat: bounds.ne.lat,
+        neLng: bounds.ne.lng,
+        keyword: keyword || undefined,
+        meetAt: meetAt || undefined,
+      });
+      if (requestId === requestIdRef.current) setGroups(result ?? []);
+    } catch (error) {
+      console.error('주변 모임 조회 실패:', error);
+      if (requestId === requestIdRef.current) setGroups([]);
+    } finally {
+      if (requestId === requestIdRef.current) setIsLoading(false);
+    }
+  }, [map, keyword, meetAt]);
 
   useEffect(() => {
     if (!map) return;
 
-    updateNearbyGroups();
-    const removeIdleListener = addMapIdleListener(map, updateNearbyGroups);
+    fetchGroups();
+    const removeIdleListener = addMapIdleListener(map, fetchGroups);
 
     return removeIdleListener;
-  }, [map, updateNearbyGroups]);
+  }, [map, fetchGroups]);
 
-  return { groups: nearbyGroups };
+  // 모임 생성 직후처럼, idle 이벤트를 기다리지 않고 즉시 다시 불러오고 싶을 때 사용.
+  return { groups, isLoading, refetch: fetchGroups };
 }

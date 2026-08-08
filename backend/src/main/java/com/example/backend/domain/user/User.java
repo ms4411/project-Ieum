@@ -31,7 +31,6 @@ public class User {
     private String nickname;
 
     @Column(nullable = false)
-    @Size(min = 8, message = "최소 8글자 이상 입력")
     @JsonIgnore
     private String pw;
 

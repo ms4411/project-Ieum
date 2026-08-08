@@ -9,14 +9,13 @@ public class ResponseDTO{
 
     public record successRes(
             Boolean success,
-            Map<String,?> data
+            Object data
     ){
         @Builder
-        public successRes(Map<String,?> data){
+        public successRes(Object data){
             this(true, data);
         }
     }
-
     public record errorRes(
             boolean success,
             Map<String,?> error

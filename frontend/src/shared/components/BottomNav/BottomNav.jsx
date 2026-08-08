@@ -42,7 +42,7 @@ function BottomNav() {
         onClick={goToProfile}
       >
         <span className="bottom-nav__icon" aria-hidden="true">
-          {user ? user.name.charAt(0) : '👤'}
+          {user ? user.nickname.charAt(0) : '👤'}
         </span>
         <span className="bottom-nav__label">마이프로필</span>
       </button>

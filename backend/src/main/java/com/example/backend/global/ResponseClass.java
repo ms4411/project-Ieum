@@ -9,20 +9,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @Component
 public class ResponseClass {
-    public ResponseDTO.successRes listReturn(String key, List<?> data){
+    public ResponseDTO.successRes listReturn(List<?> data){
         return ResponseDTO.successRes.builder()
-                .data(Map.of(key, data))
+                .data(data)
                 .build();
     }
 
     public ResponseDTO.successRes messageReturn(String message){
         return ResponseDTO.successRes.builder()
-                .data(Map.of("message", message))
+                .data(message)
                 .build();
     }
 

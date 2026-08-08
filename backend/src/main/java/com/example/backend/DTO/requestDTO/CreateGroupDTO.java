@@ -10,6 +10,6 @@ public record CreateGroupDTO (
         Double lat,
         Double lng,
         String address,
-        LocalDateTime meatAt
+        LocalDateTime meetAt
 ){
 }

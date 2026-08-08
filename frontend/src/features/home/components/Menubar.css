@@ -51,6 +51,21 @@
     border-left: none;
 }
 
+#datetime-filter-toggle{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text, #333);
+    white-space: nowrap;
+}
+
+#datetime-input>input:disabled{
+    opacity: 0.5;
+}
+
 #reset-datetime-btn{
     flex-shrink: 0;
     height: 40px;

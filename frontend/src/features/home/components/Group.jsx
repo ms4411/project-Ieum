@@ -1,9 +1,9 @@
 function Group({ group }) {
   return (
     <li>
-      <img src={group.imgUrl} alt={group.name} />
+      {group.imgUrl && <img src={group.imgUrl} alt={group.title} />}
       <div>
-        <h1>{group.name}</h1>
+        <h1>{group.title}</h1>
         <p>{group.content}</p>
       </div>
     </li>

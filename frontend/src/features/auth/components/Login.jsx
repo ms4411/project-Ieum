@@ -2,22 +2,33 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../../shared/components/Button/Button';
 import { useAuthUser } from '../hooks/useAuthUser';
+import { ApiError } from '../../../infrastructure/api/apiClient';
 import './AuthForm.css';
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuthUser();
-  const [name, setName] = useState('');
+  const [loginId, setLoginId] = useState('');
+  const [pw, setPw] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // TODO: 실제 로그인 API 연동. 백엔드 연동 전까지는 입력한 아이디를 그대로
-  // 닉네임으로 사용해 로그인 처리한다.
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const trimmedName = name.trim();
-    if (!trimmedName) return;
+    if (!loginId.trim() || !pw) return;
 
-    login(trimmedName);
-    navigate('/my-profile');
+    setErrorMessage('');
+    setIsSubmitting(true);
+    try {
+      await login(loginId.trim(), pw);
+      navigate('/my-profile');
+    } catch (err) {
+      setErrorMessage(
+        err instanceof ApiError ? err.message : '로그인에 실패했습니다.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -29,14 +40,25 @@ function Login() {
 
         <form id="login-form" className="auth-form" onSubmit={handleSubmit}>
           <input
-            id="name"
+            id="loginId"
             type="text"
             placeholder="아이디를 입력하세요"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={loginId}
+            onChange={(e) => setLoginId(e.target.value)}
           />
-          <input id="pw" type="password" placeholder="비밀번호를 입력하세요" />
-          <Button name="로그인하기" type="submit" />
+          <input
+            id="pw"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+          />
+          {errorMessage && <p className="auth-form__error">{errorMessage}</p>}
+          <Button
+            name={isSubmitting ? '로그인 중...' : '로그인하기'}
+            type="submit"
+            disabled={isSubmitting}
+          />
         </form>
 
         <Link className="auth-card__link" to="/signup">

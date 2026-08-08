@@ -44,7 +44,7 @@ public class GroupService {
                 .lat(groupDTO.lat())
                 .lng(groupDTO.lng())
                 .address(groupDTO.address())
-                .meetAt(groupDTO.meatAt())
+                .meetAt(groupDTO.meetAt())
                 .maxPeople(groupDTO.maxMemberCnt())
                 .imgUrl(groupDTO.imgUrl())
                 .build();

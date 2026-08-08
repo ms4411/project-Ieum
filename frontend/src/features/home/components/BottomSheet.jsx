@@ -16,7 +16,7 @@ function BottomSheet({ groups }) {
       <hr />
       <ul id="group-list">
         {groups.map((group) => (
-          <Group key={group.id ?? group.name} group={group} />
+          <Group key={group.id ?? group.title} group={group} />
         ))}
       </ul>
     </div>

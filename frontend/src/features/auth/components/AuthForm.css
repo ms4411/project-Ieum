@@ -36,6 +36,12 @@
     flex-direction: column;
     gap: 10px;
 }
+.auth-form__error{
+  color: #e0353c;
+  font-size: 0.85rem;
+  margin: -4px 0 0;
+}
+
 .auth-form > input{
     height: 44px;
 }

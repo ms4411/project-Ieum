@@ -1,7 +1,6 @@
 package com.example.backend.domain.reservation.controller;
 
 import com.example.backend.DTO.ResponseDTO;
-import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.domain.reservation.ReservationService;
 import com.example.backend.domain.reservation.ReservationStatus;
 import com.example.backend.domain.reservation.RoleEnum;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.backend.domain.reservation.controller.dto.request.UpdateStatusReservationDTO;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,14 +51,14 @@ public class ReservationController {
 
     @GetMapping("/groups/{groupId}/join-requests")
     @PreAuthorize("hasRole('HOST')")
-    public List<Reservation> getAllReservationByStatus(
+    public ResponseDTO.successRes getAllReservationByStatus(
             @RequestHeader("Authorization") String token,
             @PathVariable UUID groupId,
             @RequestParam ReservationStatus status
     ){
         UUID groupIdByUser=tokenManager.getCreatGroupId(token);
         if(groupIdByUser.equals(groupId)) {
-            return reservationService.getByIdAndStatus(groupId, status);
+            return responseClass.listReturn(reservationService.getByIdAndStatus(groupId, status));
         }
         else {
             throw new CustomException(ErrorCode.FORBIDDEN);
@@ -69,6 +67,7 @@ public class ReservationController {
 
     @PatchMapping("/groups/{groupId}/join-requests/{reservationId}")
     @PreAuthorize("hasRole('HOST')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeStatus(
             @RequestHeader("Authorization") String token,
             @RequestBody UpdateStatusReservationDTO dto,
@@ -85,11 +84,11 @@ public class ReservationController {
     }
 
     @GetMapping("/users/me/join-requests")
-    public List<Reservation> getAllMyReservation(
+    public ResponseDTO.successRes getAllMyReservation(
             @RequestHeader("Authorization") String token,
             @RequestParam ReservationStatus status
     ){
-        return reservationService.getMyReservationByStatus(token, status);
+        return responseClass.listReturn(reservationService.getMyReservationByStatus(token, status));
     }
 
     @GetMapping("/groups/{groupId}/members")
@@ -98,7 +97,6 @@ public class ReservationController {
             @RequestHeader("Authorization") String token
     ){
         return responseClass.listReturn(
-                "members",
                 reservationService.getMyGroupMembers(groupId, token)
         );
     }
@@ -108,6 +106,6 @@ public class ReservationController {
             @RequestHeader("Authorization") String token,
             @RequestParam(required = false) RoleEnum role
     ){
-        return responseClass.listReturn("groups",reservationService.getMyGroup(token, role));
+        return responseClass.listReturn(reservationService.getMyGroup(token, role));
     }
 }

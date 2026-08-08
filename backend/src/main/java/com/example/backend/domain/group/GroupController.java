@@ -41,7 +41,7 @@ public class GroupController {
     public ResponseDTO.successRes getGroupById(@PathVariable UUID groupId){
         Group group=groupService.getGroupById(groupId);
         return ResponseDTO.successRes.builder()
-                .data(Map.of("group", group))
+                .data(group)
                 .build();
     }
 
@@ -52,7 +52,7 @@ public class GroupController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) LocalDateTime meetAt
     ){
-        return responseClass.listReturn("groups", groupService.searchGroup(swLat,swLng,neLat,neLng,keyword, meetAt));
+        return responseClass.listReturn(groupService.searchGroup(swLat,swLng,neLat,neLng,keyword, meetAt));
     }
 
     @PreAuthorize("hasRole('HOST')")

@@ -5,7 +5,6 @@ import com.example.backend.global.ResponseClass;
 import com.example.backend.global.security.TokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,14 +21,14 @@ public class UserController {
 
     @GetMapping()
     public ResponseDTO.successRes getAllUser(){
-        return responseClass.listReturn("users", userService.getAllUser());
+        return responseClass.listReturn(userService.getAllUser());
     }
 
     @GetMapping("/me")
     public ResponseDTO.successRes getMe(@RequestHeader("Authorization") String token){
         String sub = tokenManager.getSubject(token);
         return ResponseDTO.successRes.builder()
-                .data(Map.of("myData",userService.getById(UUID.fromString(sub))))
+                .data(userService.getById(UUID.fromString(sub)))
                 .build();
     }
 
