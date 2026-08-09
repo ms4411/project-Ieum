@@ -70,7 +70,7 @@ public class AuthService {
             throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
         Object role=tokenManager
-                .expiredTokenGetPayload(dto.getAcceptToken())
+                .expiredTokenGetPayload(dto.getAccessToken())
                 .get("role");
 
         Map<String, Object> data=new HashMap<>();

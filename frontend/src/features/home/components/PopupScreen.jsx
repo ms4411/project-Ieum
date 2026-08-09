@@ -41,7 +41,7 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
         lat: locationRef.current.lat,
         lng: locationRef.current.lng,
         address: locationRef.current.address,
-        meatAt: `${meetDate}T${meetTime}:00`,
+        meetAt: `${meetDate}T${meetTime}:00`,
       });
       onCreated?.();
     } catch (err) {

@@ -47,9 +47,10 @@ export function AuthProvider({ children }) {
         return;
       }
       try {
-        const me = await authApi.getMe();
+        const meRes = await authApi.getMe();
         if (!cancelled && authGenerationRef.current === generation) {
-          setUser(me);
+          // meRes.data (실제 유저 객체) 전달
+          setUser(meRes.data ?? meRes); 
         }
       } catch {
         if (!cancelled && authGenerationRef.current === generation) {
@@ -68,10 +69,12 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (loginId, pw) => {
     authGenerationRef.current += 1;
     const tokens = await authApi.login({ loginId, pw });
-    setTokens(tokens);
-    const me = await authApi.getMe();
-    setUser(me);
-    return me;
+    setTokens(tokens.data ?? tokens);
+    const meRes = await authApi.getMe();
+    console.log("login 후 me 응답:", meRes?.data ?? meRes);
+    // meRes.data (실제 유저 객체) 전달
+    setUser(meRes?.data ?? meRes); 
+    return meRes?.data ?? meRes;
   }, []);
 
   const signUp = useCallback(

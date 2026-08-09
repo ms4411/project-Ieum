@@ -28,32 +28,43 @@ function Menubar({
         />
       </div>
 
-      <div id="datetime-row">
-        <label id="datetime-filter-toggle">
-          <input
-            type="checkbox"
-            checked={isTimeFilterOn}
-            onChange={(e) => onToggleTimeFilter(e.target.checked)}
-          />
+      <div id="datetime-row" className="box">
+        <button
+          type="button"
+          id="datetime-filter-toggle"
+          className={isTimeFilterOn ? 'is-on' : ''}
+          aria-pressed={isTimeFilterOn}
+          onClick={() => onToggleTimeFilter(!isTimeFilterOn)}
+        >
+          <span className="datetime-filter-toggle__dot" aria-hidden="true" />
           시간 필터
-        </label>
-        <div id="datetime-input">
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => onDateChange(e.target.value)}
-            disabled={!isTimeFilterOn}
-          />
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => onTimeChange(e.target.value)}
-            disabled={!isTimeFilterOn}
-          />
-        </div>
-        <button type="button" id="reset-datetime-btn" onClick={onResetDateTime}>
-          현재 시각
         </button>
+
+        {/* 꺼져 있을 땐 입력란을 아예 렌더링하지 않는다 — 한 줄에 라벨+입력+버튼을
+            다 욱여넣지 않아도 되므로 좁은 화면에서 잘려나가는 문제도 함께 없어진다. */}
+        {isTimeFilterOn && (
+          <div id="datetime-controls">
+            <div id="datetime-fields">
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => onDateChange(e.target.value)}
+              />
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => onTimeChange(e.target.value)}
+              />
+            </div>
+            <button
+              type="button"
+              id="reset-datetime-btn"
+              onClick={onResetDateTime}
+            >
+              현재 시각
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

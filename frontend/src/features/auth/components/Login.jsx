@@ -26,7 +26,8 @@ function Login() {
       navigate('/');
     } catch (err) {
       setErrorMessage(
-        err instanceof ApiError ? err.message : '로그인에 실패했습니다.'
+        err instanceof ApiError ? err.message : '로그인에 실패했습니다.',
+        console.error("진짜 에러 원인:", err)
       );
     } finally {
       setIsSubmitting(false);
@@ -34,6 +35,7 @@ function Login() {
   };
 
   return (
+    
     <div className="auth-screen">
       <div className="auth-card box">
         <p className="auth-card__emoji" aria-hidden="true">👋</p>

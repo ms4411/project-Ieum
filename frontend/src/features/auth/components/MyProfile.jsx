@@ -16,7 +16,8 @@ function MyProfile() {
   // 새로고침 직후에는 저장된 토큰으로 로그인 상태를 복구하는 중일 수 있으므로,
   // 그 확인(isLoading)이 끝난 뒤에도 user가 없을 때만 로그인 화면으로 보낸다.
   useEffect(() => {
-    if (!isLoading && !user) navigate('/login', { replace: true });
+    if (!isLoading && !user) 
+      navigate('/login', { replace: true });
   }, [isLoading, user, navigate]);
 
   if (isLoading || !user) return null;

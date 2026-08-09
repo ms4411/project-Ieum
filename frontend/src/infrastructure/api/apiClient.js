@@ -49,7 +49,7 @@ async function refreshTokens() {
             code: body?.error?.code,
           });
         }
-        const tokens = body?.data?.tokens;
+        const tokens = body?.data;
         setTokens(tokens);
         return tokens;
       })
@@ -107,9 +107,12 @@ export async function apiFetch(
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   // auth가 true(필수)든 'optional'(선택)이든, 로그인 후 저장된 토큰이 있으면 항상 담아 보낸다.
   // auth: false만 토큰을 붙이지 않는다(로그인/회원가입처럼 토큰 개념이 없는 요청).
-  if (auth) {
-    const token = getAccessToken();
-    if (token) headers.Authorization = `Bearer ${token}`;
+  // 이 요청이 실제로 들고 나간 토큰을 따로 기억해둔다 — 아래 401 처리에서
+  // "지금도 이 토큰이 여전히 유효한(=최신) 세션의 토큰인지" 비교할 때 쓴다.
+  const requestToken = auth ? getAccessToken() : null;
+  console.log("가져온 토큰:", requestToken);
+  if (auth && requestToken) {
+    headers.Authorization = `Bearer ${requestToken}`;
   }
 
   const res = await fetch(buildUrl(path, params), {
@@ -122,6 +125,13 @@ export async function apiFetch(
 
   if (res.ok) return parsed;
 
+  // 이 요청을 보낼 때 쓴 토큰이 지금 저장된 토큰과 다르면, 응답을 기다리는 사이에
+  // 새로 로그인(또는 로그아웃)이 일어나 세션이 이미 교체된 것이다. 그런 "뒤늦게
+  // 도착한 낡은 요청"의 401 실패로 방금 로그인한 최신 세션을 지워버리면 안 되므로,
+  // 그럴 땐 토큰 삭제도 강제 로그아웃도 하지 않는다.
+  const isStillCurrentSession = () =>
+    !requestToken || getAccessToken() === requestToken;
+
   // accessToken이 만료된 경우 딱 한 번 재발급을 시도하고, 성공하면 원래 요청을 재시도한다.
   // (로그인이 필수인 요청에서만 강제 refresh/로그아웃을 수행한다. 'optional'은 토큰이
   //  유효하지 않아도 로그인 없이 계속 쓸 수 있는 화면이므로 세션을 끊지 않는다.)
@@ -130,15 +140,17 @@ export async function apiFetch(
       await refreshTokens();
       return apiFetch(path, { method, body, params, auth, _isRetry: true });
     } catch {
-      clearTokens();
-      unauthorizedHandler?.();
+      if (isStillCurrentSession()) {
+        clearTokens();
+        unauthorizedHandler?.();
+      }
       throw new ApiError('로그인이 만료되었습니다. 다시 로그인해 주세요.', {
         status: 401,
       });
     }
   }
 
-  if (res.status === 401 && auth === true) {
+  if (res.status === 401 && auth === true && isStillCurrentSession()) {
     clearTokens();
     unauthorizedHandler?.();
   }

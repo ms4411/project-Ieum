@@ -15,7 +15,7 @@ export function login({ loginId, pw }) {
     method: 'POST',
     auth: false,
     body: { loginId, pw },
-  }).then((res) => res.data.tokens);
+  }).then((res) => res.data);
 }
 
 export function logout() {
@@ -28,7 +28,7 @@ export function logout() {
 // auth 기본값(true)이므로 apiFetch가 로그인 후 저장된 accessToken을
 // Authorization 헤더에 자동으로 담아 보낸다(별도로 넘길 필요 없음).
 export function getMe() {
-  return apiFetch('/api/v1/users/me').then((res) => res.data.myData);
+  return apiFetch('/api/v1/users/me').then((res) => res.data);
 }
 
 export function updateNickname(nickname) {

@@ -40,13 +40,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO.successRes signIn(@Valid @RequestBody SignInDTO signInDTO){
         return ResponseDTO.successRes.builder()
-            .data(Map.of(
-                    "tokens",
+            .data(
                     authService.signIn(
                         signInDTO.getLoginId(),
                         signInDTO.getPw()
                     )
-            ))
+            )
             .build();
     }
 
