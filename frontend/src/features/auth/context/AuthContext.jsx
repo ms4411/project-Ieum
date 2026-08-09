@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
 } from 'react';
 import * as authApi from '../api/authApi';
 import {
@@ -21,6 +22,13 @@ export function AuthProvider({ children }) {
   // 이 값이 true인 동안은 "로그인 안 한 사용자"로 단정할 수 없다.
   const [isLoading, setIsLoading] = useState(true);
 
+  // 아래 세션 복구 effect는 앱이 처음 켜질 때 딱 한 번 실행되는 비동기 작업이다.
+  // 그런데 이 응답이 오기 전에 사용자가 로그인/로그아웃 같은 "더 최신" 인증 액션을
+  // 끝내버리면, 뒤늦게 도착하는 낡은 복구 결과가 방금 로그인한 상태를 덮어써서
+  // "로그인했는데도 다시 로그인하라고 함" 버그가 생긴다. login/logout/withdraw가
+  // 호출될 때마다 세대를 올리고, 복구 effect는 자기 세대가 최신일 때만 상태를 반영한다.
+  const authGenerationRef = useRef(0);
+
   // accessToken 재발급까지 실패해서 완전히 로그아웃 처리해야 할 때
   // apiClient가 호출해주는 콜백을 등록해둔다.
   useEffect(() => {
@@ -31,6 +39,7 @@ export function AuthProvider({ children }) {
   // 새로고침 등으로 앱이 다시 켜졌을 때, 저장된 accessToken이 있으면
   // 내 정보를 조회해서 로그인 상태를 복구한다.
   useEffect(() => {
+    const generation = authGenerationRef.current;
     let cancelled = false;
     (async () => {
       if (!getAccessToken()) {
@@ -39,10 +48,14 @@ export function AuthProvider({ children }) {
       }
       try {
         const me = await authApi.getMe();
-        if (!cancelled) setUser(me);
+        if (!cancelled && authGenerationRef.current === generation) {
+          setUser(me);
+        }
       } catch {
-        clearTokens();
-        if (!cancelled) setUser(null);
+        if (!cancelled && authGenerationRef.current === generation) {
+          clearTokens();
+          setUser(null);
+        }
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -53,6 +66,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = useCallback(async (loginId, pw) => {
+    authGenerationRef.current += 1;
     const tokens = await authApi.login({ loginId, pw });
     setTokens(tokens);
     const me = await authApi.getMe();
@@ -70,6 +84,7 @@ export function AuthProvider({ children }) {
   );
 
   const logout = useCallback(async () => {
+    authGenerationRef.current += 1;
     try {
       if (getAccessToken()) await authApi.logout();
     } catch {
@@ -86,6 +101,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const withdraw = useCallback(async () => {
+    authGenerationRef.current += 1;
     await authApi.deleteUser();
     clearTokens();
     setUser(null);

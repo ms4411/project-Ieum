@@ -9,7 +9,7 @@ import './MyGroups.css';
 function MyGroups() {
   const navigate = useNavigate();
   const { user, isLoading: isAuthLoading } = useAuthUser();
-  const { groups, isLoading } = useJoinedGroups();
+  const { groups, isLoading, error } = useJoinedGroups();
 
   useEffect(() => {
     if (!isAuthLoading && !user) navigate('/login', { replace: true });
@@ -29,6 +29,10 @@ function MyGroups() {
       {isLoading ? (
         <div className="my-groups-screen__empty">
           <p>불러오는 중...</p>
+        </div>
+      ) : error ? (
+        <div className="my-groups-screen__empty">
+          <p>{error.message ?? '모임 목록을 불러오지 못했습니다.'}</p>
         </div>
       ) : groups.length === 0 ? (
         <div className="my-groups-screen__empty">

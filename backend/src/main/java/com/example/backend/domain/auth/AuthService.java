@@ -72,16 +72,10 @@ public class AuthService {
         Object role=tokenManager
                 .expiredTokenGetPayload(dto.getAcceptToken())
                 .get("role");
-        Object createGroupId=tokenManager
-                .expiredTokenGetPayload(dto.getAcceptToken())
-                .get("createGroupId");
 
         Map<String, Object> data=new HashMap<>();
         if (role!=null){
             data.put("role", role);
-        }
-        if (createGroupId!=null){
-            data.put("createGroupId", createGroupId);
         }
         return tokenManager.createTokens(sub, data);
     }

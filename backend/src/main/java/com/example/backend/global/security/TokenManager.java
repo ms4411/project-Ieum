@@ -150,17 +150,6 @@ public class TokenManager {
         Claims payload=getToken(token);
         return payload.getSubject();
     }
-    public UUID getCreatGroupId(String token){
-        Claims payload=getToken(token);
-        if (!(payload.containsKey("createGroupId"))){
-            return null;
-        }
-        return UUID.fromString(
-                String.valueOf(
-                        payload.get("createGroupId")
-                )
-        );
-    }
     //---------------------------------------------filter를 위한 메서드
 
     // ----------------------------------------------------------------
