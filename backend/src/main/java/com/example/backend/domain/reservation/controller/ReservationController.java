@@ -56,13 +56,7 @@ public class ReservationController {
             @PathVariable UUID groupId,
             @RequestParam ReservationStatus status
     ){
-        UUID groupIdByUser=tokenManager.getCreatGroupId(token);
-        if(groupIdByUser.equals(groupId)) {
-            return responseClass.listReturn(reservationService.getByIdAndStatus(groupId, status));
-        }
-        else {
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
+        return responseClass.listReturn(reservationService.getByIdAndStatus(token, groupId, status));
     }
 
     @PatchMapping("/groups/{groupId}/join-requests/{reservationId}")
@@ -74,13 +68,8 @@ public class ReservationController {
             @PathVariable UUID groupId,
             @PathVariable Long reservationId
     ){
-        UUID groupIdByUser=tokenManager.getCreatGroupId(token);
-        if(groupIdByUser.equals(groupId)) {
-            reservationService.changeStatus(groupId, reservationId, dto);
-        }
-        else {
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
+        reservationService.changeStatus(token, groupId, reservationId, dto);
+
     }
 
     @GetMapping("/users/me/join-requests")
