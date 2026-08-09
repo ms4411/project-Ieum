@@ -91,16 +91,22 @@ function buildUrl(path, params) {
  * @param {'GET'|'POST'|'PATCH'|'DELETE'} [options.method='GET']
  * @param {object} [options.body] - JSON으로 직렬화될 요청 바디
  * @param {object} [options.params] - 쿼리스트링 파라미터
- * @param {boolean} [options.auth=true] - true면 저장된 accessToken을 Authorization 헤더로 붙인다
+ * @param {boolean|'optional'} [options.auth=true]
+ *   - true: 로그인이 필요한 요청. 저장된 accessToken을 Authorization 헤더로 담아 보내고,
+ *           401이면 refresh 후 재시도 → 그래도 실패하면 로그아웃 처리한다.
+ *   - 'optional': 로그인이 필수는 아니지만(예: 모임 검색/상세), 로그인된 상태라면
+ *           반드시 accessToken을 담아 보낸다. 401이 나도 강제 로그아웃은 하지 않는다.
+ *   - false: 로그인/회원가입처럼 토큰 개념 자체가 없는 요청. 절대 토큰을 붙이지 않는다.
  * @returns 백엔드가 내려준 JSON 바디 전체(성공 응답은 { success, data }, 일부 엔드포인트는 배열을 그대로 반환)
  */
 export async function apiFetch(
   path,
-  { method = 'GET', body, params, auth = true, _isRetry = false ,token} = {}
+  { method = 'GET', body, params, auth = true, _isRetry = false } = {}
 ) {
   const headers = {};
   if (body !== undefined) headers['Content-Type'] = 'application/json';
-  if (token !== undefined) headers['Authorization'] = token;
+  // auth가 true(필수)든 'optional'(선택)이든, 로그인 후 저장된 토큰이 있으면 항상 담아 보낸다.
+  // auth: false만 토큰을 붙이지 않는다(로그인/회원가입처럼 토큰 개념이 없는 요청).
   if (auth) {
     const token = getAccessToken();
     if (token) headers.Authorization = `Bearer ${token}`;
@@ -117,7 +123,9 @@ export async function apiFetch(
   if (res.ok) return parsed;
 
   // accessToken이 만료된 경우 딱 한 번 재발급을 시도하고, 성공하면 원래 요청을 재시도한다.
-  if (res.status === 401 && auth && !_isRetry && getRefreshToken()) {
+  // (로그인이 필수인 요청에서만 강제 refresh/로그아웃을 수행한다. 'optional'은 토큰이
+  //  유효하지 않아도 로그인 없이 계속 쓸 수 있는 화면이므로 세션을 끊지 않는다.)
+  if (res.status === 401 && auth === true && !_isRetry && getRefreshToken()) {
     try {
       await refreshTokens();
       return apiFetch(path, { method, body, params, auth, _isRetry: true });
@@ -130,13 +138,16 @@ export async function apiFetch(
     }
   }
 
-  if (res.status === 401 && auth) {
+  if (res.status === 401 && auth === true) {
     clearTokens();
     unauthorizedHandler?.();
   }
 
-  throw new ApiError(parsed?.error?.message ?? '요청 처리 중 오류가 발생했습니다.', {
+  // @Valid 검증 실패(MethodArgumentNotValidException)는 { success, error } 래핑 없이
+  // { code, message }가 최상위로 바로 내려온다. 래핑 유무에 상관없이 안전하게 읽는다.
+  const errorPayload = parsed?.error ?? parsed;
+  throw new ApiError(errorPayload?.message ?? '요청 처리 중 오류가 발생했습니다.', {
     status: res.status,
-    code: parsed?.error?.code,
+    code: errorPayload?.code,
   });
 }

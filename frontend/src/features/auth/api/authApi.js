@@ -25,10 +25,10 @@ export function logout() {
 }
 
 // 로그인된 내 정보 조회. { id, loginId, nickname } 형태.
+// auth 기본값(true)이므로 apiFetch가 로그인 후 저장된 accessToken을
+// Authorization 헤더에 자동으로 담아 보낸다(별도로 넘길 필요 없음).
 export function getMe() {
-  return apiFetch('/api/v1/users/me', {
-    token: localStorage.getItem('ACCESS_TOKEN_KEY')
-  }).then((res) => res.data.myData);
+  return apiFetch('/api/v1/users/me').then((res) => res.data.myData);
 }
 
 export function updateNickname(nickname) {

@@ -108,8 +108,6 @@ public class TokenManager {
             // Bearer 접두사 제거
             if (token != null && token.startsWith("Bearer ")) {
                 token = token.substring(7);
-            }else{
-                throw new CustomException(ErrorCode.BAD_REQUEST);
             }
             // 토큰 서명을 검증하고 내부 데이터(Claims)를 파싱
             // 만료되었거나 누군가 1글자라도 위조했다면 예외(Exception)가 발생.

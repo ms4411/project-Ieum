@@ -51,7 +51,7 @@ public class GroupService {
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(
                 createUserId.toString(),
-                Map.of("role", "ROLE_HOST","createGroupId",group.getId())
+                Map.of("role", "ROLE_HOST")
         );
         return Map.of(
                 "tokens",tokens,
@@ -82,7 +82,8 @@ public class GroupService {
         Group group=groupRepository
                 .findById(groupId)
                 .orElseThrow(()-> new CustomException(ErrorCode.GROUP_NOT_FOUND));
-        if(!group.getCreateUser().getId().equals(UUID.fromString(tokenManager.getSubject(token)))){
+        UUID userId=UUID.fromString(tokenManager.getSubject(token));
+        if(!group.getCreateUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
         groupRepository.delete(group);
@@ -97,7 +98,8 @@ public class GroupService {
         Group group=groupRepository
                 .findById(groupId)
                 .orElseThrow(()-> new CustomException(ErrorCode.GROUP_NOT_FOUND));
-        if(!group.getCreateUser().getId().equals(UUID.fromString(tokenManager.getSubject(token)))){
+        UUID userId=UUID.fromString(tokenManager.getSubject(token));
+        if(!group.getCreateUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
         int updateCnt=groupRepository.changeMaxPeople(groupId, dto.maxMember());

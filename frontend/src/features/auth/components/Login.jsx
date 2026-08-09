@@ -20,8 +20,10 @@ function Login() {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
+      // login()이 로그인 → 토큰 저장 → 내 정보 조회(getMe)까지 마친 뒤에 resolve되므로,
+      // 여기 도달한 시점엔 이미 사용자 정보를 읽어온 상태다. 홈 화면으로 자동 이동한다.
       await login(loginId.trim(), pw);
-      navigate('/my-profile');
+      navigate('/');
     } catch (err) {
       setErrorMessage(
         err instanceof ApiError ? err.message : '로그인에 실패했습니다.'
