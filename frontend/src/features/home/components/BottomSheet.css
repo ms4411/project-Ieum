@@ -44,17 +44,17 @@ hr{
 #group-list>li{
     border-bottom: 1px solid var(--point-color1);
     display:grid;
-    grid-template-columns:1fr 5fr;
+    grid-template-columns:1.5fr 5fr;
     gap:8px;
+    height: 100px;
     padding:8px;
 }
 
 #group-list img{
-    box-shadow: inset 0px 0px 3px 1px var(--point-color1);
     border-radius: var(--border-radius-size);
-    padding:8px;
     aspect-ratio: 1/1;
-    height: 100%;
-    width: auto;
+    width: 100%;
+    height: auto;
     align-self: center;
+    object-fit: contain;
 }

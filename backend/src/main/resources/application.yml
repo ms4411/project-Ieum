@@ -13,3 +13,5 @@ spring:
 
 jwt:
   secret-key: jnkoj-bijhbjhbj-nbijhb-ihbihbiuhbva-sdfghjk
+file:
+  upload-dir: ./upload_imgs/

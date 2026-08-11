@@ -7,6 +7,7 @@ import com.example.backend.domain.group.Group;
 import com.example.backend.domain.group.repository.GroupRepository;
 import com.example.backend.domain.group.repository.GroupRepositoryCustom;
 import com.example.backend.domain.user.UserRepository;
+import com.example.backend.global.FileProperties;
 import com.example.backend.global.error.Exception.CustomException;
 import com.example.backend.global.error.Exception.ErrorCode;
 import com.example.backend.global.security.TokenManager;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +31,26 @@ public class GroupService {
     private final GroupRepositoryCustom groupRepositoryCustom;
     private final UserRepository userRepository;
     private final TokenManager tokenManager;
+    private final FileProperties fileProperties;
 
     @Transactional
     @Builder(builderMethodName = "createGroupBuilder")
     public Map<String, Object> createGroup(
             CreateGroupDTO groupDTO,
             String token
-    ){
+    ) {
         UUID createUserId=UUID.fromString(tokenManager.getSubject(token));
+        String imgUrl;
+        if(groupDTO.imgFile()==null||groupDTO.imgFile().isEmpty()){
+            imgUrl="common.jpg";
+        }else {
+            imgUrl = UUID.randomUUID() + "_" + groupDTO.imgFile().getOriginalFilename();
+            try {
+                groupDTO.imgFile().transferTo(new File(fileProperties.uploadDir()+imgUrl));
+            }catch (IOException e){
+                throw new CustomException(ErrorCode.FILE_IO_EXCEPTION);
+            }
+        }
         Group group=Group.builder()
                 .id(UUID.randomUUID())
                 .title(groupDTO.title())
@@ -46,7 +61,7 @@ public class GroupService {
                 .address(groupDTO.address())
                 .meetAt(groupDTO.meetAt())
                 .maxPeople(groupDTO.maxMemberCnt())
-                .imgUrl(groupDTO.imgUrl())
+                .imgUrl(imgUrl)
                 .build();
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(

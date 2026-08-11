@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    FILE_IO_EXCEPTION("파일 저장 실패. 재시도 요청", HttpStatus.INTERNAL_SERVER_ERROR),
+
     FORBIDDEN("권한이 없음", HttpStatus.FORBIDDEN),
     BAD_REQUEST("올바르지 않은 요청", HttpStatus.BAD_REQUEST),
 
