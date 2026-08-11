@@ -34,9 +34,7 @@ public class ReservationController {
             @RequestBody CreateReservationDTO dto
     ){
         return ResponseDTO.successRes.builder()
-                .data(
-                        Map.of("newReservation",reservationService.createReservation(dto, token, groupId))
-                )
+                .data(reservationService.createReservation(dto, token, groupId))
                 .build();
     }
 

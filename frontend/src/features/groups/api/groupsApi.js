@@ -8,12 +8,12 @@ export function searchGroups({ swLat, swLng, neLat, neLng, keyword, meetAt }) {
   return apiFetch('/api/v1/groups', {
     params: { swLat, swLng, neLat, neLng, keyword, meetAt },
     auth: 'optional',
-  }).then((res) => res.data.groups);
+  }).then((res) => res.data);
 }
 
 export function getGroupById(groupId) {
   return apiFetch(`/api/v1/groups/${groupId}`, { auth: 'optional' }).then(
-    (res) => res.data.group
+    (res) => res.data
   );
 }
 
@@ -26,7 +26,7 @@ export async function createGroup(createGroupDTO) {
     body: createGroupDTO,
   });
   setTokens(res.data.tokens);
-  return res.data.newGroup;
+  return res.data;
 }
 
 export function updateGroup(groupId, updateGroupDTO) {
@@ -43,13 +43,13 @@ export function deleteGroup(groupId) {
 // 내가 참여 중인(=신청이 승인된) 모임 목록. role을 넘기면 HOST/MEMBER로 필터링된다.
 export function getMyGroups(role) {
   return apiFetch('/api/v1/users/me/groups', { params: { role } }).then(
-    (res) => res.data.groups
+    (res) => res.data
   );
 }
 
 export function getGroupMembers(groupId) {
   return apiFetch(`/api/v1/groups/${groupId}/members`).then(
-    (res) => res.data.members
+    (res) => res.data
   );
 }
 
@@ -57,7 +57,7 @@ export function createReservation(groupId, { message, role }) {
   return apiFetch(`/api/v1/groups/${groupId}/join-requests`, {
     method: 'POST',
     body: { message, role },
-  }).then((res) => res.data.newReservation);
+  }).then((res) => res.data);
 }
 
 export function deleteReservation(groupId) {
