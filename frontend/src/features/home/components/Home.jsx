@@ -5,6 +5,7 @@ import BottomSheet from './BottomSheet';
 import BottomMenu from './BottomMenu';
 import { useCurrentLocationMarker } from '../hooks/useCurrentLocationMarker';
 import { useNearbyGroups } from '../hooks/useNearbyGroups';
+import { useGroupMarkers } from '../hooks/useGroupMarkers';
 import { useKoreaDateTime } from '../hooks/useKoreaDateTime';
 
 function Home() {
@@ -22,6 +23,13 @@ function Home() {
     meetAt: isTimeFilterOn ? `${date}T${time}` : undefined,
   });
 
+  // 마커를 누르면 해당 모임을 저장한다. 같은 마커를 연달아 눌러도 바텀시트가
+  // 다시 스크롤되도록, 값이 아니라 매번 새로운 객체(nonce 포함)로 갱신한다.
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  useGroupMarkers(mapObject, groups, {
+    onMarkerClick: (group) => setSelectedGroup({ group, nonce: Date.now() }),
+  });
+
   const handleResetDateTime = () => {
     resetToNow();
     setIsTimeFilterOn(false);
@@ -34,7 +42,7 @@ function Home() {
         onMoveToCurrentLocation={moveToCurrentLocation}
         onGroupCreated={refetchGroups}
       />
-      <BottomSheet groups={groups} />
+      <BottomSheet groups={groups} selectedGroup={selectedGroup} />
       <Menubar
         keyword={keyword}
         onKeywordChange={setKeyword}

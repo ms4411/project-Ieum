@@ -1,4 +1,4 @@
-// 마커 생성 + 이미지/인포윈도우 부착 로직을 한 곳에 모은 어댑터
+// 마커 생성 + 이미지/인포윈도우/클릭 콜백 부착 로직을 한 곳에 모은 어댑터
 export function createKakaoMarker({
   lat,
   lng,
@@ -7,6 +7,7 @@ export function createKakaoMarker({
   map,
   draggable,
   onDragEnd,
+  onClick,
 }) {
   const { kakao } = window;
   const position = new kakao.maps.LatLng(lat, lng);
@@ -29,6 +30,10 @@ export function createKakaoMarker({
     kakao.maps.event.addListener(marker, 'click', () => {
       infoWindow.open(map, marker);
     });
+  }
+
+  if (onClick) {
+    kakao.maps.event.addListener(marker, 'click', onClick);
   }
 
   if (draggable && onDragEnd) {

@@ -50,11 +50,26 @@ hr{
     padding:8px;
 }
 
-#group-list img{
+#group-list .group-item__thumb{
     border-radius: var(--border-radius-size);
     aspect-ratio: 1/1;
     width: 100%;
-    height: auto;
     align-self: center;
-    object-fit: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    font-size: 28px;
+    overflow: hidden;
+}
+#group-list .group-item__thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.group-item__title{
+    color: inherit;
+    text-decoration: none;
+    display: block;
 }

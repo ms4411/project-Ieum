@@ -53,7 +53,7 @@ export function getGroupMembers(groupId) {
   );
 }
 
-export function createReservation(groupId, { message, role }) {
+export function createReservation(groupId, { message, role = 'MEMBER' } = {}) {
   return apiFetch(`/api/v1/groups/${groupId}/join-requests`, {
     method: 'POST',
     body: { message, role },
