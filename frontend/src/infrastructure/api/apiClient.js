@@ -32,14 +32,14 @@ let refreshPromise = null;
 
 async function refreshTokens() {
   const refreshToken = getRefreshToken();
-  const acceptToken = getAccessToken();
+  const accessToken = getAccessToken();
   if (!refreshToken) throw new ApiError('로그인이 필요합니다.', { status: 401 });
 
   if (!refreshPromise) {
     refreshPromise = fetch(`${BASE_URL}/api/v1/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken, acceptToken }),
+      body: JSON.stringify({ refreshToken, accessToken }),
     })
       .then(async (res) => {
         const body = await safeParseJson(res);
