@@ -9,19 +9,8 @@ import {
 } from '../api/groupsApi';
 import { useAuthUser } from '../../auth';
 import { ApiError } from '../../../infrastructure/api/apiClient';
+import { formatMeetAt } from '../../../shared/utils/formatMeetAt';
 import './GroupDetail.css';
-
-const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
-
-function formatMeetAt(meetAt) {
-  if (!meetAt) return '시간 정보 없음';
-  const parsed = new Date(meetAt);
-  if (Number.isNaN(parsed.getTime())) return meetAt;
-  const period = parsed.getHours() < 12 ? '오전' : '오후';
-  const hour12 = ((parsed.getHours() + 11) % 12) + 1;
-  const minutes = String(parsed.getMinutes()).padStart(2, '0');
-  return `${parsed.getMonth() + 1}월 ${parsed.getDate()}일(${WEEKDAY[parsed.getDay()]}) ${period} ${hour12}:${minutes}`;
-}
 
 function GroupDetail() {
   const { groupId } = useParams();

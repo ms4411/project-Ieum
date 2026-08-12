@@ -44,9 +44,8 @@ hr{
 #group-list>li{
     border-bottom: 1px solid var(--point-color1);
     display:grid;
-    grid-template-columns:1.5fr 5fr;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 5fr);
     gap:8px;
-    height: 100px;
     padding:8px;
 }
 
@@ -71,5 +70,40 @@ hr{
 .group-item__title{
     color: inherit;
     text-decoration: none;
+}
+.group-item__title>h1{
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size:24px;
+
+}
+.group-item__content{
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.group-item__meta{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 6px;
+}
+.group-item__meta li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+.group-item__meta li span:last-child{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

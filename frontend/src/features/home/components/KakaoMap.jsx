@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createKakaoMap } from '../../../infrastructure/kakao/kakaoMap';
+import './KakaoMap.css';
 
 const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
 const DEFAULT_ZOOM_LEVEL = 3;

@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
+import { formatMeetAt } from '../../../shared/utils/formatMeetAt';
 
 function Group({ group }) {
+  const IMGS_URL=import.meta.env.VITE_IMGS_URL
   return (
     <li id={`group-item-${group.id}`}>
       <div className="group-item__thumb">
         {group.imgUrl ? (
           <img
-            src={'http://localhost:8080/upload_imgs/' + group.imgUrl}
+            src={`${IMGS_URL}` + group.imgUrl}
             alt={group.title}
           />
         ) : (
@@ -23,7 +25,23 @@ function Group({ group }) {
         >
           <h1>{group.title}</h1>
         </Link>
-        <p>{group.content}</p>
+        <p className="group-item__content">{group.content}</p>
+        <ul className="group-item__meta">
+          <li>
+            <span aria-hidden="true">🕒</span>
+            <span>{formatMeetAt(group.meetAt)}</span>
+          </li>
+          <li>
+            <span aria-hidden="true">📍</span>
+            <span>{group.address || '장소 정보 없음'}</span>
+          </li>
+          <li>
+            <span aria-hidden="true">👥</span>
+            <span>
+              {group.currentMemberCount ?? 0} / {group.maxPeople ?? '-'}명
+            </span>
+          </li>
+        </ul>
       </div>
     </li>
   );
