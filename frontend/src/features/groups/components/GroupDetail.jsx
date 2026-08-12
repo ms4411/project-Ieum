@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../shared/components/Button/Button';
-import { getGroupById, createReservation, getGroupJoinRequests } from '../api/groupsApi';
+import {
+  getGroupById,
+  createReservation,
+  getGroupJoinRequests,
+  updateJoinRequestStatus,
+} from '../api/groupsApi';
 import { useAuthUser } from '../../auth';
 import { ApiError } from '../../../infrastructure/api/apiClient';
 import './GroupDetail.css';
@@ -39,6 +44,11 @@ function GroupDetail() {
   const [joinRequests, setJoinRequests] = useState([]);
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);
   const [requestsError, setRequestsError] = useState('');
+  // 신청 카드를 눌렀을 때만 메시지를 펼쳐서 보여준다 (아코디언).
+  const [expandedRequestId, setExpandedRequestId] = useState(null);
+  // 수락/거절 처리 중인 신청 id — 처리 중엔 그 카드의 버튼만 비활성화한다.
+  const [processingRequestId, setProcessingRequestId] = useState(null);
+  const [actionError, setActionError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -102,6 +112,26 @@ function GroupDetail() {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleRequestDecision = async (reservationId, status) => {
+    setActionError('');
+    setProcessingRequestId(reservationId);
+    try {
+      await updateJoinRequestStatus(groupId, reservationId, status);
+      // 처리된 신청은 대기 목록에서 바로 빼준다.
+      setJoinRequests((prev) => prev.filter((req) => req.id !== reservationId));
+      // 수락한 경우 참여 인원 수가 바뀌므로 모임 정보를 다시 불러온다.
+      if (status === 'APPROVED') {
+        getGroupById(groupId).then(setGroup).catch(() => {});
+      }
+    } catch (err) {
+      setActionError(
+        err instanceof ApiError ? err.message : '처리 중 오류가 발생했습니다.'
+      );
+    } finally {
+      setProcessingRequestId(null);
     }
   };
 
@@ -197,28 +227,74 @@ function GroupDetail() {
                       <p>아직 들어온 신청이 없습니다.</p>
                     </div>
                   ) : (
-                    <ul className="group-detail-screen__requests">
-                      {joinRequests.map((req) => (
-                        <li key={req.id} className="group-detail-screen__request box">
-                          <span
-                            className="group-detail-screen__request-avatar"
-                            aria-hidden="true"
-                          >
-                            {req.userNickname?.charAt(0) ?? '?'}
-                          </span>
-                          <div className="group-detail-screen__request-body">
-                            <p className="group-detail-screen__request-name">
-                              {req.userNickname ?? '알 수 없음'}
-                            </p>
-                            {req.message && (
-                              <p className="group-detail-screen__request-message">
-                                {req.message}
-                              </p>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                    <>
+                      {actionError && (
+                        <p className="group-detail-screen__error">{actionError}</p>
+                      )}
+                      <ul className="group-detail-screen__requests">
+                        {joinRequests.map((req) => {
+                          const isExpanded = expandedRequestId === req.id;
+                          const isProcessing = processingRequestId === req.id;
+                          return (
+                            <li key={req.id} className="group-detail-screen__request box">
+                              <button
+                                type="button"
+                                className="group-detail-screen__request-row"
+                                aria-expanded={isExpanded}
+                                onClick={() =>
+                                  setExpandedRequestId((prev) =>
+                                    prev === req.id ? null : req.id
+                                  )
+                                }
+                              >
+                                <span
+                                  className="group-detail-screen__request-avatar"
+                                  aria-hidden="true"
+                                >
+                                  {req.userNickname?.charAt(0) ?? '?'}
+                                </span>
+                                <div className="group-detail-screen__request-body">
+                                  <p className="group-detail-screen__request-name">
+                                    {req.userNickname ?? '알 수 없음'}
+                                  </p>
+                                  {/* 메시지는 평소엔 숨겨두고, 카드를 눌렀을 때만 펼쳐서 보여준다 */}
+                                  {isExpanded && req.message && (
+                                    <p className="group-detail-screen__request-message">
+                                      {req.message}
+                                    </p>
+                                  )}
+                                  {isExpanded && !req.message && (
+                                    <p className="group-detail-screen__request-message group-detail-screen__request-message--empty">
+                                      남긴 메시지가 없습니다.
+                                    </p>
+                                  )}
+                                </div>
+                                <span
+                                  className="group-detail-screen__request-chevron"
+                                  aria-hidden="true"
+                                >
+                                  {isExpanded ? '▲' : '▼'}
+                                </span>
+                              </button>
+
+                              <div className="group-detail-screen__request-actions">
+                                <Button
+                                  name={isProcessing ? '처리 중...' : '거절'}
+                                  variant="outline"
+                                  disabled={isProcessing}
+                                  onClick={() => handleRequestDecision(req.id, 'REJECTED')}
+                                />
+                                <Button
+                                  name={isProcessing ? '처리 중...' : '수락'}
+                                  disabled={isProcessing}
+                                  onClick={() => handleRequestDecision(req.id, 'APPROVED')}
+                                />
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
                   )}
                 </>
               ) : (

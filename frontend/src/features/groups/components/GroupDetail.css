@@ -135,9 +135,18 @@
 }
 .group-detail-screen__request{
     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 14px;
+}
+/* 카드 자체를 버튼으로 만들어 눌렀을 때만 메시지가 펼쳐지게 한다 */
+.group-detail-screen__request-row{
+    display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 12px 14px;
+    width: 100%;
+    background: none;
+    text-align: left;
 }
 .group-detail-screen__request-avatar{
     width: 36px;
@@ -157,6 +166,7 @@
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+    flex: 1;
 }
 .group-detail-screen__request-name{
     font-size: 14px;
@@ -168,4 +178,24 @@
     color: var(--color-text-muted);
     line-height: 1.4;
     word-break: break-word;
+    margin-top: 4px;
 }
+.group-detail-screen__request-message--empty{
+    font-style: italic;
+}
+.group-detail-screen__request-chevron{
+    font-size: 10px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+.group-detail-screen__request-actions{
+    display: flex;
+    gap: 8px;
+}
+.group-detail-screen__request-actions .app-button{
+    flex: 1;
+    padding: 9px 0;
+    font-size: 13px;
+}
+

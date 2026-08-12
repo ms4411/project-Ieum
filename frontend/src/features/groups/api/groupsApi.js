@@ -68,6 +68,14 @@ export function getGroupJoinRequests(groupId, status = 'PENDING') {
   }).then((res) => res.data);
 }
 
+// 모임장이 특정 신청 건을 수락/거절한다 (호스트 전용).
+export function updateJoinRequestStatus(groupId, reservationId, status) {
+  return apiFetch(`/api/v1/groups/${groupId}/join-requests/${reservationId}`, {
+    method: 'PATCH',
+    body: { status },
+  });
+}
+
 export function createReservation(groupId, { message, role = 'MEMBER' } = {}) {
   return apiFetch(`/api/v1/groups/${groupId}/join-requests`, {
     method: 'POST',

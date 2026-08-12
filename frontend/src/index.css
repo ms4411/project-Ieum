@@ -109,6 +109,20 @@ input[type=date],input[type=time]{
     box-shadow: var(--shadow-soft);
 }
 
+/* 화면 안에서 세로로 긴 목록(모임 상세, 내 모임 등)은 스크롤이 필요하지만,
+   9:20 비율의 앱 화면 안에 스크롤바 트랙이 그대로 보이면 웹페이지처럼 보여서
+   모바일 앱 느낌이 깨진다. 스크롤 기능은 그대로 두고 스크롤바만 안 보이게
+   전역으로 차단해둔다 (Firefox/legacy Edge + WebKit 계열 모두 대응). */
+*{
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+*::-webkit-scrollbar{
+    display: none;
+    width: 0;
+    height: 0;
+}
+
 /* ---- 공용 버튼 (shared/components/Button) ---- */
 .app-button{
     display:flex;
