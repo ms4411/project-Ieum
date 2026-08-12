@@ -6,16 +6,11 @@ import com.example.backend.domain.reservation.ReservationStatus;
 import com.example.backend.domain.reservation.RoleEnum;
 import com.example.backend.domain.reservation.controller.dto.request.CreateReservationDTO;
 import com.example.backend.global.ResponseClass;
-import com.example.backend.global.error.Exception.CustomException;
-import com.example.backend.global.error.Exception.ErrorCode;
-import com.example.backend.global.security.TokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.backend.domain.reservation.controller.dto.request.UpdateStatusReservationDTO;
-
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +18,6 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final TokenManager tokenManager;
     private final ResponseClass responseClass;
 
     @PostMapping("/groups/{groupId}/join-requests")

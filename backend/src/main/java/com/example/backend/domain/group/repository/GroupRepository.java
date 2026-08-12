@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface GroupRepository extends JpaRepository<Group, UUID> {
     List<Group> findAllByCreateUserId (UUID CreateUserId);
 
+    boolean existsByCreateUser_Id(UUID createUserId);
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Group g SET g.maxPeople = :newMaxPeople " +
             "WHERE g.id = :id AND g.currentMemberCount <= :newMaxPeople")

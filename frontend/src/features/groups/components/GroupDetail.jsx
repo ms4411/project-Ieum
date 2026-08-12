@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../shared/components/Button/Button';
-import { getGroupById, createReservation } from '../api/groupsApi';
+import { getGroupById, createReservation, getGroupJoinRequests } from '../api/groupsApi';
 import { useAuthUser } from '../../auth';
 import { ApiError } from '../../../infrastructure/api/apiClient';
 import './GroupDetail.css';
@@ -32,6 +32,14 @@ function GroupDetail() {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // 로그인한 내가 이 모임을 만든 본인(호스트)인지. group.createUser.id와
+  // 내 user.id를 비교한다 — 로그인 정보/모임 정보가 둘 다 준비된 뒤에만 판단한다.
+  const isHost = Boolean(user && group?.createUser?.id === user.id);
+
+  const [joinRequests, setJoinRequests] = useState([]);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(false);
+  const [requestsError, setRequestsError] = useState('');
+
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
@@ -54,6 +62,31 @@ function GroupDetail() {
       cancelled = true;
     };
   }, [groupId]);
+
+  // 본인이 만든 모임일 때만 신청 목록(대기 중)을 불러온다.
+  useEffect(() => {
+    if (!isHost) return;
+    let cancelled = false;
+    setIsLoadingRequests(true);
+    setRequestsError('');
+    getGroupJoinRequests(groupId, 'PENDING')
+      .then((data) => {
+        if (!cancelled) setJoinRequests(data ?? []);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setRequestsError(
+            err instanceof ApiError ? err.message : '신청 목록을 불러오지 못했습니다.'
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingRequests(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isHost, groupId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,36 +179,80 @@ function GroupDetail() {
               <p className="group-detail-screen__content">{group.content}</p>
             </section>
 
-            {/* 모임 참여 신청 폼 */}
+            {/* 모임 참여 신청 폼 — 본인이 만든 모임이면 신청 폼 대신 들어온 신청 목록을 보여준다 */}
             <section className="group-detail-screen__section">
-              <h3>참여 신청</h3>
-              {isAuthLoading ? null : !user ? (
-                <div className="group-detail-screen__notice box">
-                  <p>참여 신청은 로그인 후 가능합니다.</p>
-                  <Button name="로그인하러 가기" onClick={() => navigate('/login')} />
-                </div>
-              ) : isSubmitted ? (
-                <div className="group-detail-screen__notice box">
-                  <p>🎉 신청이 접수됐어요! 모임장의 승인을 기다려주세요.</p>
-                </div>
-              ) : (
-                <form className="group-detail-screen__join-form" onSubmit={handleSubmit}>
-                  <textarea
-                    rows={4}
-                    placeholder="간단한 소개나 하고 싶은 말을 남겨보세요 (선택)"
-                    style={{ resize: 'none' }}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                  {submitError && (
-                    <p className="group-detail-screen__error">{submitError}</p>
+              {isHost ? (
+                <>
+                  <h3>모임 신청 목록</h3>
+                  {isLoadingRequests ? (
+                    <div className="group-detail-screen__notice box">
+                      <p>불러오는 중...</p>
+                    </div>
+                  ) : requestsError ? (
+                    <div className="group-detail-screen__notice box">
+                      <p>{requestsError}</p>
+                    </div>
+                  ) : joinRequests.length === 0 ? (
+                    <div className="group-detail-screen__notice box">
+                      <p>아직 들어온 신청이 없습니다.</p>
+                    </div>
+                  ) : (
+                    <ul className="group-detail-screen__requests">
+                      {joinRequests.map((req) => (
+                        <li key={req.id} className="group-detail-screen__request box">
+                          <span
+                            className="group-detail-screen__request-avatar"
+                            aria-hidden="true"
+                          >
+                            {req.userNickname?.charAt(0) ?? '?'}
+                          </span>
+                          <div className="group-detail-screen__request-body">
+                            <p className="group-detail-screen__request-name">
+                              {req.userNickname ?? '알 수 없음'}
+                            </p>
+                            {req.message && (
+                              <p className="group-detail-screen__request-message">
+                                {req.message}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                  <Button
-                    name={isSubmitting ? '신청 중...' : '참여 신청하기'}
-                    type="submit"
-                    disabled={isSubmitting}
-                  />
-                </form>
+                </>
+              ) : (
+                <>
+                  <h3>참여 신청</h3>
+                  {isAuthLoading ? null : !user ? (
+                    <div className="group-detail-screen__notice box">
+                      <p>참여 신청은 로그인 후 가능합니다.</p>
+                      <Button name="로그인하러 가기" onClick={() => navigate('/login')} />
+                    </div>
+                  ) : isSubmitted ? (
+                    <div className="group-detail-screen__notice box">
+                      <p>🎉 신청이 접수됐어요! 모임장의 승인을 기다려주세요.</p>
+                    </div>
+                  ) : (
+                    <form className="group-detail-screen__join-form" onSubmit={handleSubmit}>
+                      <textarea
+                        rows={4}
+                        placeholder="간단한 소개나 하고 싶은 말을 남겨보세요 (선택)"
+                        style={{ resize: 'none' }}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                      />
+                      {submitError && (
+                        <p className="group-detail-screen__error">{submitError}</p>
+                      )}
+                      <Button
+                        name={isSubmitting ? '신청 중...' : '참여 신청하기'}
+                        type="submit"
+                        disabled={isSubmitting}
+                      />
+                    </form>
+                  )}
+                </>
               )}
             </section>
           </div>

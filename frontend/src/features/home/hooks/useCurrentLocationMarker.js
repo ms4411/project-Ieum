@@ -13,11 +13,20 @@ const CURRENT_LOCATION_MARKER_IMAGE = { src: '/makerImg.png', size: 24 };
 export function useCurrentLocationMarker(map) {
   const markerRef = useRef(null);
   const lastKnownPositionRef = useRef(null);
+  // 지도가 뜬 뒤 유저 위치로 자동 이동시키는 건 화면당 한 번만 한다.
+  // (10초마다 오는 위치 갱신 때마다 다시 가운데로 당기면 사용자가 지도를
+  //  움직여 봐도 계속 원위치로 돌아가버려서 불편하다.)
+  const hasAutoMovedRef = useRef(false);
 
   const updateMarkerPosition = useCallback(
     (position) => {
       lastKnownPositionRef.current = position;
       if (!map) return;
+
+      if (!hasAutoMovedRef.current) {
+        hasAutoMovedRef.current = true;
+        panToPosition(map, position.lat, position.lng);
+      }
 
       if (markerRef.current) {
         markerRef.current.setMap(null);

@@ -47,10 +47,25 @@ export function getMyGroups(role) {
   );
 }
 
+// 내가 신청해둔(아직 결과가 안 나온/처리된) 모임 신청 내역. status는 필수.
+// 예: getMyJoinRequests('PENDING') — "신청자" 필터에서 사용.
+export function getMyJoinRequests(status) {
+  return apiFetch('/api/v1/users/me/join-requests', { params: { status } }).then(
+    (res) => res.data
+  );
+}
+
 export function getGroupMembers(groupId) {
   return apiFetch(`/api/v1/groups/${groupId}/members`).then(
     (res) => res.data
   );
+}
+
+// 모임장이 자신이 만든 모임에 들어온 신청 목록을 조회한다 (호스트 전용, status 필수).
+export function getGroupJoinRequests(groupId, status = 'PENDING') {
+  return apiFetch(`/api/v1/groups/${groupId}/join-requests`, {
+    params: { status },
+  }).then((res) => res.data);
 }
 
 export function createReservation(groupId, { message, role = 'MEMBER' } = {}) {

@@ -11,6 +11,7 @@ import com.example.backend.domain.user.UserRepository;
 import com.example.backend.global.error.Exception.CustomException;
 import com.example.backend.global.error.Exception.ErrorCode;
 import com.example.backend.global.security.TokenManager;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,12 +84,12 @@ public class ReservationService {
     }
 
     public List<Reservation> getByIdAndStatus(String token, UUID groupId, ReservationStatus status){
-        if(!groupId.equals( //token에 담긴 sub 정보와 groupID의 정보 불일치
-                groupRepository.findById(UUID.fromString(
-                                tokenManager.getSubject(token)))
-                        .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND)).getId()
-        )
-        ){
+        UUID sub=UUID.fromString(tokenManager.getSubject(token));
+        Group group=groupRepository
+                .findById(groupId)
+                .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND));
+        if(!group.getCreateUser().getId().equals(sub))
+        {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
         return reservationRepository
@@ -97,15 +98,12 @@ public class ReservationService {
 
     @Transactional
     public void changeStatus(String token, UUID groupId, Long reservationId, UpdateStatusReservationDTO dto){
+        UUID sub=UUID.fromString(tokenManager.getSubject(token));
         Group group=groupRepository
                 .findById(groupId)
                 .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND));
-        if(!group.equals( //token에 담긴 sub 정보와 groupID의 정보 불일치
-            groupRepository.findById(UUID.fromString(
-                tokenManager.getSubject(token)))
-                .orElseThrow(()->new CustomException(ErrorCode.GROUP_NOT_FOUND))
-            )
-        ){
+        if(!group.getCreateUser().getId().equals(sub))
+        {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
         Reservation reservation=reservationRepository

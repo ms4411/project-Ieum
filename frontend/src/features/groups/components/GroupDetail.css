@@ -126,3 +126,46 @@
     font-size: 13px;
     color: #E4572E;
 }
+
+/* ---- 모임 신청 목록 (호스트가 자신의 모임을 볼 때) ---- */
+.group-detail-screen__requests{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.group-detail-screen__request{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+}
+.group-detail-screen__request-avatar{
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-secondary);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+}
+.group-detail-screen__request-body{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.group-detail-screen__request-name{
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+.group-detail-screen__request-message{
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    word-break: break-word;
+}

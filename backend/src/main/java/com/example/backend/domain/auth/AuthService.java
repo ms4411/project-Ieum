@@ -1,6 +1,7 @@
 package com.example.backend.domain.auth;
 
 import com.example.backend.DTO.responseDTO.TokensDTO;
+import com.example.backend.domain.group.repository.GroupRepository;
 import com.example.backend.domain.user.User;
 import com.example.backend.domain.user.UserRepository;
 import com.example.backend.global.error.Exception.CustomException;
@@ -24,6 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenManager  tokenManager;
+    private final GroupRepository groupRepository;
 
     public String signUp(String loginId, String name, String pw, String checkPw){
         if(!pw.equals(checkPw)){
@@ -46,6 +48,9 @@ public class AuthService {
         }
         Map<String, Object> data=new HashMap<>();
         String memberId= user.getId().toString();
+        if(groupRepository.existsByCreateUser_Id(user.getId())){
+            data.put("role", "ROLE_HOST");
+        }
         return tokenManager.createTokens(memberId, data);
     }
 

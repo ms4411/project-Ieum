@@ -1,15 +1,29 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GroupNotice from './GroupNotice';
 import MemberList from './MemberList';
+import Button from '../../../shared/components/Button/Button';
 import { useJoinedGroups } from '../hooks/useJoinedGroups';
 import { useAuthUser } from '../../auth';
 import './MyGroups.css';
 
+const FILTERS = [
+  { value: 'HOST', label: '호스트' },
+  { value: 'MEMBER', label: '참여자' },
+  { value: 'APPLICANT', label: '신청자' },
+];
+
+const EMPTY_MESSAGE = {
+  HOST: '아직 만든 모임이 없습니다.',
+  MEMBER: '아직 참여 중인 모임이 없습니다.',
+  APPLICANT: '아직 신청한 모임이 없습니다.',
+};
+
 function MyGroups() {
   const navigate = useNavigate();
   const { user, isLoading: isAuthLoading } = useAuthUser();
-  const { groups, isLoading, error } = useJoinedGroups();
+  const [filter, setFilter] = useState('HOST');
+  const { groups, isLoading, error } = useJoinedGroups(filter);
 
   useEffect(() => {
     if (!isAuthLoading && !user) navigate('/login', { replace: true });
@@ -26,6 +40,24 @@ function MyGroups() {
         <h1 className="my-groups-screen__title">내가 참여한 모임</h1>
       </div>
 
+      <div className="my-groups-screen__filters" role="tablist">
+        {FILTERS.map((f) => (
+          <button
+            key={f.value}
+            type="button"
+            role="tab"
+            aria-selected={filter === f.value}
+            className={
+              'my-groups-screen__filter' +
+              (filter === f.value ? ' is-active' : '')
+            }
+            onClick={() => setFilter(f.value)}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {isLoading ? (
         <div className="my-groups-screen__empty">
           <p>불러오는 중...</p>
@@ -37,14 +69,23 @@ function MyGroups() {
       ) : groups.length === 0 ? (
         <div className="my-groups-screen__empty">
           <p className="my-groups-screen__empty-emoji" aria-hidden="true">🌤️</p>
-          <p>현재 참여한 모임이 없습니다.</p>
+          <p>{EMPTY_MESSAGE[filter]}</p>
         </div>
       ) : (
         <ul className="my-groups-screen__list">
           {groups.map((group) => (
             <li key={group.id} className="my-groups-screen__card box">
               <GroupNotice title={group.title} content={group.content} />
-              <MemberList members={group.members} />
+              {group.isPending ? (
+                <p className="my-groups-screen__pending-badge">승인 대기 중</p>
+              ) : (
+                <MemberList members={group.members} />
+              )}
+              <Button
+                name="모임 상세보기"
+                variant="outline"
+                onClick={() => navigate(`/groups/${group.id}`)}
+              />
             </li>
           ))}
         </ul>
