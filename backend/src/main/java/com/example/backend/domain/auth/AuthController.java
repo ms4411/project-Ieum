@@ -57,7 +57,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseDTO.successRes refresh(@RequestBody TokensDTO dto){
         return ResponseDTO.successRes.builder()
-                .data(Map.of("tokens",authService.refresh(dto)))
+                .data(authService.refresh(dto))
                 .build();
     }
 }
