@@ -84,9 +84,10 @@ public class GroupService {
             Double swLat, Double swLng,
             Double neLat, Double neLng,
             String keyword,
-            LocalDateTime meetAt
+            LocalDateTime meetAt,
+            LocalDateTime lastAt
     ){
-        return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, keyword, meetAt);
+        return groupRepositoryCustom.searchGroup(swLat, swLng, neLat, neLng, keyword, meetAt, lastAt);
     }
 
     @Transactional

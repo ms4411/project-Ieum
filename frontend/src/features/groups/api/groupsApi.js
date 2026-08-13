@@ -13,7 +13,9 @@ export function searchGroups({ swLat, swLng, neLat, neLng, keyword, meetAt }) {
 
 export function getGroupById(groupId) {
   return apiFetch(`/api/v1/groups/${groupId}`, { auth: 'optional' }).then(
-    (res) => res.data
+    (res) => {
+      return res.data
+    }
   );
 }
 

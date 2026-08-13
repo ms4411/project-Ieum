@@ -16,7 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<Reservation> findByIdAndGroup_Id(Long id, UUID groupId);
     List<Reservation> findAllByUser_IdAndStatus(UUID userId, ReservationStatus status);
 
-    List<Reservation> findAllByGroup_Id(UUID groupId);
     List<Reservation> findAllByRoleAndUser_Id(RoleEnum role, UUID userId);
     List<Reservation> findAllByUser_Id(UUID userId);
     List<Reservation> findAllByUser_IdAndRoleAndStatus(UUID userId, RoleEnum role, ReservationStatus status);

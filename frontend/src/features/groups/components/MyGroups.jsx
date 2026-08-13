@@ -75,7 +75,7 @@ function MyGroups() {
         <ul className="my-groups-screen__list">
           {groups.map((group) => (
             <li key={group.reservationId ?? group.id} className="my-groups-screen__card box">
-              <GroupNotice title={group.title} content={group.content} />
+              <GroupNotice group={group} />
               {group.applicantStatus === 'REJECTED' ? (
                 <p className="my-groups-screen__rejected-badge">거절된 신청</p>
               ) : group.applicantStatus === 'PENDING' ? (

@@ -125,6 +125,11 @@
     color: var(--color-text);
 }
 
+.group-notice__content hr{
+    height: 1px;
+    width: 80%;
+}
+
 /* ---- MemberList ---- */
 .member-list__title{
     font-size: 12px;

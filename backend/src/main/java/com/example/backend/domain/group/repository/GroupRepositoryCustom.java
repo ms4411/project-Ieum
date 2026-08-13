@@ -3,7 +3,9 @@ package com.example.backend.domain.group.repository;
 import com.example.backend.domain.group.Group;
 import com.example.backend.domain.group.QGroup;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -18,7 +20,8 @@ public class GroupRepositoryCustom {
             Double swLat, Double swLng,
             Double neLat, Double neLng,
             String keyword,
-            LocalDateTime meetAt
+            LocalDateTime meetAt,
+            LocalDateTime lastAt
     ){
         QGroup group=QGroup.group;
         return queryFactory
@@ -27,7 +30,7 @@ public class GroupRepositoryCustom {
                         group.lat.between(swLat, neLat),
                         group.lng.between(swLng, neLng),
                         keyword!=null ? group.title.contains(keyword): null,
-                        meetAt != null ? group.meetAt.between(meetAt, meetAt.plusHours(1)) : null
+                        meetAt != null ? group.meetAt.between(meetAt, lastAt) : null
                 )
                 .fetch();
     }

@@ -43,8 +43,8 @@ function Menubar({
         {/* 꺼져 있을 땐 입력란을 아예 렌더링하지 않는다 — 한 줄에 라벨+입력+버튼을
             다 욱여넣지 않아도 되므로 좁은 화면에서 잘려나가는 문제도 함께 없어진다. */}
         {isTimeFilterOn && (
-          <div id="datetime-controls">
-            <div id="datetime-fields">
+          <>
+            <div className="datetime-fields">
               <input
                 type="date"
                 value={date}
@@ -56,6 +56,8 @@ function Menubar({
                 onChange={(e) => onTimeChange(e.target.value)}
               />
             </div>
+            <div className='datatime-fields'>
+            </div>
             <button
               type="button"
               id="reset-datetime-btn"
@@ -63,7 +65,7 @@ function Menubar({
             >
               현재 시각
             </button>
-          </div>
+          </>
         )}
       </div>
     </div>

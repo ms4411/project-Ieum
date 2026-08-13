@@ -50,9 +50,10 @@ public class GroupController {
             @RequestParam Double swLat,@RequestParam Double swLng,
             @RequestParam Double neLat,@RequestParam Double neLng,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) LocalDateTime meetAt
+            @RequestParam(required = false) LocalDateTime meetAt,
+            @RequestParam(required = false) LocalDateTime lastAt
     ){
-        return responseClass.listReturn(groupService.searchGroup(swLat,swLng,neLat,neLng,keyword, meetAt));
+        return responseClass.listReturn(groupService.searchGroup(swLat,swLng,neLat,neLng,keyword, meetAt,lastAt));
     }
 
     @PreAuthorize("hasRole('HOST')")
