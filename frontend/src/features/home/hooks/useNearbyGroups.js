@@ -4,8 +4,8 @@ import { searchGroups } from '../../groups/api/groupsApi';
 
 // 지도가 지금 보여주고 있는 범위(뷰포트) 안에 있는 모임만 서버에서 조회한다.
 // 지도를 움직이거나 확대/축소해서 멈출 때(idle)마다 다시 조회하고,
-// keyword/meetAt(검색어·날짜 필터)이 바뀔 때도 다시 조회한다.
-export function useNearbyGroups(map, { keyword, meetAt } = {}) {
+// keyword/meetAt/lastAt(검색어·날짜 필터)이 바뀔 때도 다시 조회한다.
+export function useNearbyGroups(map, { keyword, meetAt, lastAt } = {}) {
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // 응답이 요청 순서와 다르게 도착해 옛 결과로 최신 결과를 덮어쓰는 것을 막는다.
@@ -25,6 +25,7 @@ export function useNearbyGroups(map, { keyword, meetAt } = {}) {
         neLng: bounds.ne.lng,
         keyword: keyword || undefined,
         meetAt: meetAt || undefined,
+        lastAt: lastAt || undefined,
       });
       if (requestId === requestIdRef.current) setGroups(result ?? []);
     } catch (error) {
@@ -33,7 +34,7 @@ export function useNearbyGroups(map, { keyword, meetAt } = {}) {
     } finally {
       if (requestId === requestIdRef.current) setIsLoading(false);
     }
-  }, [map, keyword, meetAt]);
+  }, [map, keyword, meetAt, lastAt]);
 
   useEffect(() => {
     if (!map) return;

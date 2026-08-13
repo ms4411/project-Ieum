@@ -55,7 +55,7 @@ public class GroupService {
                 .id(UUID.randomUUID())
                 .title(groupDTO.title())
                 .content(groupDTO.content())
-                .createUser(userRepository.findById(createUserId).orElseThrow())
+                .createUser(userRepository.findById(createUserId).orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND)))
                 .lat(groupDTO.lat())
                 .lng(groupDTO.lng())
                 .address(groupDTO.address())

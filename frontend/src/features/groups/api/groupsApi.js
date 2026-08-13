@@ -1,12 +1,12 @@
 import { apiFetch } from '../../../infrastructure/api/apiClient';
 import { setTokens } from '../../../infrastructure/api/tokenStorage';
 
-// 지도 화면 범위(bounds) 안의 모임을 검색한다. keyword/meetAt은 선택.
+// 지도 화면 범위(bounds) 안의 모임을 검색한다. keyword/meetAt/lastAt은 선택.
 // 로그인 여부와 무관하게 호출 가능하지만(인증 "불필요"), 로그인된 상태라면
 // 저장된 accessToken을 그대로 실어 보낸다 → auth: 'optional'
-export function searchGroups({ swLat, swLng, neLat, neLng, keyword, meetAt }) {
+export function searchGroups({ swLat, swLng, neLat, neLng, keyword, meetAt, lastAt }) {
   return apiFetch('/api/v1/groups', {
-    params: { swLat, swLng, neLat, neLng, keyword, meetAt },
+    params: { swLat, swLng, neLat, neLng, keyword, meetAt, lastAt },
     auth: 'optional',
   }).then((res) => res.data);
 }
