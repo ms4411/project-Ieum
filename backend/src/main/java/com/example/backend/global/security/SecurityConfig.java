@@ -56,6 +56,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.addAllowedOrigin("http://localhost:5174"); // 허용할 프론트엔드 주소
+        config.addAllowedOrigin("https://project-ieum.onrender.com"); // 허용할 프론트엔드 주소
         config.addAllowedMethod("*");                     // GET, POST, PUT, DELETE 등 허용
         config.addAllowedHeader("*");                     // 모든 헤더 허용
         config.setAllowCredentials(true);                 // 쿠키/인증 헤더 허용
