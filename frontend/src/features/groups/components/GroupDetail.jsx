@@ -152,7 +152,7 @@ function GroupDetail() {
             {group.imgUrl && (
               <div className="group-detail-screen__cover">
                 <img
-                  src={`http://localhost:8080/upload_imgs/${group.imgUrl}`}
+                  src={`https://project-ieum.onrender.com/upload_imgs/${group.imgUrl}`}
                   alt={group.title}
                 />
               </div>
