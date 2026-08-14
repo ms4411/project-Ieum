@@ -110,7 +110,6 @@ export async function apiFetch(
   // 이 요청이 실제로 들고 나간 토큰을 따로 기억해둔다 — 아래 401 처리에서
   // "지금도 이 토큰이 여전히 유효한(=최신) 세션의 토큰인지" 비교할 때 쓴다.
   const requestToken = auth ? getAccessToken() : null;
-  console.log("가져온 토큰:", requestToken);
   if (auth && requestToken) {
     headers.Authorization = `Bearer ${requestToken}`;
   }

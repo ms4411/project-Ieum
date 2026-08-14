@@ -71,7 +71,6 @@ export function AuthProvider({ children }) {
     const tokens = await authApi.login({ loginId, pw });
     setTokens(tokens.data ?? tokens);
     const meRes = await authApi.getMe();
-    console.log("login 후 me 응답:", meRes?.data ?? meRes);
     // meRes.data (실제 유저 객체) 전달
     setUser(meRes?.data ?? meRes); 
     return meRes?.data ?? meRes;

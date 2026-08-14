@@ -17,7 +17,6 @@ function BottomSheet(props){
     };
 
     useEffect(() => {
-        let test = { name: 'wls이네 집', content: '집', imgUrl: '../../public/favicon.svg' };
         
         // 🟢 함수형 업데이트(prevGroups)를 사용합니다.
         props.setGroups(prevGroups => [...prevGroups, test]);

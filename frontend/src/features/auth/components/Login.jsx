@@ -26,8 +26,7 @@ function Login() {
       navigate('/');
     } catch (err) {
       setErrorMessage(
-        err instanceof ApiError ? err.message : '로그인에 실패했습니다.',
-        console.error("진짜 에러 원인:", err)
+        err instanceof ApiError ? err.message : '로그인에 실패했습니다.'
       );
     } finally {
       setIsSubmitting(false);
