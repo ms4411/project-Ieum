@@ -55,6 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO.successRes refresh(@RequestBody TokensDTO dto){
         return ResponseDTO.successRes.builder()
                 .data(authService.refresh(dto))

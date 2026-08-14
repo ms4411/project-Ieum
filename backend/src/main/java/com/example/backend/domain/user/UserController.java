@@ -33,6 +33,7 @@ public class UserController {
     }
 
     @PatchMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeNickname(@RequestBody OneDTO<String> NewNickname, @RequestHeader("Authorization")String token){
         userService.changeNickname(token, NewNickname.data());
     }

@@ -1,17 +1,21 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   application:
     name: backend
   datasource:
-    url: jdbc:h2:mem:testdb
+    # 환경 변수가 없으면 콜론(:) 뒤의 기본값(localhost)을 사용합니다.
+    url: ${DATASOURCE_URL:jdbc:mysql://localhost:5432/mydb}
+    username: ${DATASOURCE_USERNAME:mysql}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
 
 jwt:
-  secret-key: jnkoj-bijhbjhbj-nbijhb-ihbihbiuhbva-sdfghjk
+  secret-key: ${JWT_KEY}
 file:
   upload-dir: ./upload_imgs/
