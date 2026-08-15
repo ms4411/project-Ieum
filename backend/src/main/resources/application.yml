@@ -22,5 +22,3 @@ spring:
 
 jwt:
   secret-key: ${JWT_KEY}
-file:
-  upload-dir: ./upload_imgs/

@@ -31,7 +31,6 @@ public class GroupService {
     private final GroupRepositoryCustom groupRepositoryCustom;
     private final UserRepository userRepository;
     private final TokenManager tokenManager;
-    private final FileProperties fileProperties;
 
     @Transactional
     @Builder(builderMethodName = "createGroupBuilder")
@@ -40,17 +39,6 @@ public class GroupService {
             String token
     ) {
         UUID createUserId=UUID.fromString(tokenManager.getSubject(token));
-        String imgUrl;
-        if(groupDTO.imgFile()==null||groupDTO.imgFile().isEmpty()){
-            imgUrl="common.jpg";
-        }else {
-            imgUrl = UUID.randomUUID() + "_" + groupDTO.imgFile().getOriginalFilename();
-            try {
-                groupDTO.imgFile().transferTo(new File(fileProperties.uploadDir()+imgUrl));
-            }catch (IOException e){
-                throw new CustomException(ErrorCode.FILE_IO_EXCEPTION);
-            }
-        }
         Group group=Group.builder()
                 .id(UUID.randomUUID())
                 .title(groupDTO.title())
@@ -61,7 +49,7 @@ public class GroupService {
                 .address(groupDTO.address())
                 .meetAt(groupDTO.meetAt())
                 .maxPeople(groupDTO.maxMemberCnt())
-                .imgUrl(imgUrl)
+                .imgUrl(groupDTO.imgUrl())
                 .build();
         groupRepository.save(group);
         TokensDTO tokens=tokenManager.createTokens(

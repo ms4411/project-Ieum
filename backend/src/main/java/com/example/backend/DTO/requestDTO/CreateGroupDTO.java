@@ -1,13 +1,11 @@
 package com.example.backend.DTO.requestDTO;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 
 public record CreateGroupDTO (
         String content,
         String title,
-        MultipartFile imgFile,
+        String imgUrl,
         int maxMemberCnt,
         Double lat,
         Double lng,

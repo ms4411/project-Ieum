@@ -40,7 +40,6 @@ public class SecurityConfig {
                         //        "/api/v1/auth/login",
                         //        "/api/v1/auth/signUp"
                         //).permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().permitAll()
                         //.anyRequest().authenticated()
                 )

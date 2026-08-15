@@ -5,6 +5,7 @@ import { useKoreaDateTime } from '../hooks/useKoreaDateTime';
 import { createGroup } from '../../groups/api/groupsApi';
 import { ApiError } from '../../../infrastructure/api/apiClient';
 import './PopupScreen.css';
+import { uploadImage } from '../../../uploadImages';
 
 function PopupScreen({ lat, lng, onClose, onCreated }) {
   // LocationPicker가 자체적으로 주소를 화면에 표시하므로, 여기서는 리렌더링이
@@ -19,6 +20,8 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
   const [meetTime, setMeetTime] = useState(time);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imgFile, setImgFile]=useState(null);
+  const [imgUrl, setImgUrl]=useState('');
 
   const handleLocationChange = useCallback((nextLocation) => {
     locationRef.current = nextLocation;
@@ -33,10 +36,14 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
+      const uploadImg=await uploadImage(imgFile)
+      console.log('Supabase 업로드 결과 URL:', uploadImg);
+
+      setImgUrl(uploadImg);
       await createGroup({
         title: title.trim(),
         content: content.trim(),
-        imgUrl: null,
+        imgUrl: uploadImg,
         maxMemberCnt: Number(maxMemberCnt),
         lat: locationRef.current.lat,
         lng: locationRef.current.lng,
@@ -63,6 +70,11 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
             initialLat={lat}
             initialLng={lng}
             onLocationChange={handleLocationChange}
+          />
+          <input
+            type='file'
+            accept='.jpg, .png, .svg'
+            onChange={(e)=>setImgFile(e.target.files[0]|| null)}
           />
           <input
             required
