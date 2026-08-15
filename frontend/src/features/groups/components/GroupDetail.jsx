@@ -39,6 +39,8 @@ function GroupDetail() {
   const [processingRequestId, setProcessingRequestId] = useState(null);
   const [actionError, setActionError] = useState('');
 
+  const imgFolder=import.meta.env.VITE_IMGS_URL
+
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
@@ -152,7 +154,7 @@ function GroupDetail() {
             {group.imgUrl && (
               <div className="group-detail-screen__cover">
                 <img
-                  src={`https://project-ieum.onrender.com/upload_imgs/${group.imgUrl}`}
+                  src={`${imgFolder}${group.imgUrl}`}
                   alt={group.title}
                 />
               </div>
