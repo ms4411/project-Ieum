@@ -39,7 +39,6 @@ function GroupDetail() {
   const [processingRequestId, setProcessingRequestId] = useState(null);
   const [actionError, setActionError] = useState('');
 
-  const imgFolder=import.meta.env.VITE_IMGS_URL
 
   useEffect(() => {
     let cancelled = false;
@@ -154,7 +153,7 @@ function GroupDetail() {
             {group.imgUrl && (
               <div className="group-detail-screen__cover">
                 <img
-                  src={`${imgFolder}${group.imgUrl}`}
+                  src={group.imgUrl}
                   alt={group.title}
                 />
               </div>

@@ -2,13 +2,12 @@ import { Link } from 'react-router-dom';
 import { formatMeetAt } from '../../../shared/utils/formatMeetAt';
 
 function Group({ group }) {
-  const IMGS_URL=import.meta.env.VITE_IMGS_URL
   return (
     <li id={`group-item-${group.id}`}>
       <div className="group-item__thumb">
         {group.imgUrl ? (
           <img
-            src={`${IMGS_URL}` + group.imgUrl}
+            src={group.imgUrl}
             alt={group.title}
           />
         ) : (
