@@ -36,7 +36,10 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
-      const uploadImg=await uploadImage(imgFile)
+      let uploadImg=await uploadImage(imgFile)
+      if(imgFile==null){
+        uploadImg="https://scljvmfyshmfdnlqgftz.supabase.co/storage/v1/object/public/images/common.jpg"
+      }
       console.log('Supabase 업로드 결과 URL:', uploadImg);
 
       setImgUrl(uploadImg);
