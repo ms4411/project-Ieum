@@ -60,3 +60,21 @@ textarea{
     font-size: 12px;
     margin-top: 4px;
 }
+#file-input::file-selector-button{
+    display: none;
+}
+#file-input::before {
+    content: '';
+    display: block;
+    color: red;
+    margin-left: 5px;
+    background-image: var(--bg-url);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1/1;
+    border-radius: var(--border-radius-size);
+    
+}

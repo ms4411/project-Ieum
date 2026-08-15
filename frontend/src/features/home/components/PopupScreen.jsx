@@ -27,6 +27,27 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
     locationRef.current = nextLocation;
   }, []);
 
+  const handleImgChange = async (file) => {
+  // 1. 선택된 파일 객체를 State에 보관
+  setImgFile(file);
+
+  // 2. 파일이 없거나 선택을 취소한 경우 -> 기본 이미지 URL 설정 후 종료
+  if (!file) {
+    setImgUrl("https://scljvmfyshmfdnlqgftz.supabase.co/storage/v1/object/public/images/common.jpg");
+    return;
+  }
+
+  // 3. 파일이 정상적으로 선택된 경우 -> Supabase 업로드 실행
+  try {
+    // 🚨 State(imgFile) 대신 매개변수로 받은 'file'을 직접 넘겨주어야 합니다!
+    const uploadImg = await uploadImage(file); 
+    setImgUrl(uploadImg);
+  } catch (error) {
+    console.error("이미지 업로드 실패:", error);
+    setErrorMessage("이미지 업로드에 실패했습니다.");
+  }
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !content.trim() || !maxMemberCnt || !meetDate || !meetTime) {
@@ -36,17 +57,10 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
-      let uploadImg=await uploadImage(imgFile)
-      if(imgFile==null){
-        uploadImg="https://scljvmfyshmfdnlqgftz.supabase.co/storage/v1/object/public/images/common.jpg"
-      }
-      console.log('Supabase 업로드 결과 URL:', uploadImg);
-
-      setImgUrl(uploadImg);
       await createGroup({
         title: title.trim(),
         content: content.trim(),
-        imgUrl: uploadImg,
+        imgUrl: imgUrl,
         maxMemberCnt: Number(maxMemberCnt),
         lat: locationRef.current.lat,
         lng: locationRef.current.lng,
@@ -75,9 +89,11 @@ function PopupScreen({ lat, lng, onClose, onCreated }) {
             onLocationChange={handleLocationChange}
           />
           <input
+            id='file-input'
+            style={{ '--bg-url': `url(${imgUrl})` }}
             type='file'
             accept='.jpg, .png, .svg'
-            onChange={(e)=>setImgFile(e.target.files[0]|| null)}
+            onChange={(e)=>handleImgChange(e.target.files[0]|| null)}
           />
           <input
             required
