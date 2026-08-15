@@ -15,6 +15,10 @@ spring:
     username: ${DATASOURCE_USERNAME:mysql}
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: ${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}
+    hikari:
+       maximum-pool-size: 2 # 최대 커넥션 수를 3개로 제한
+       minimum-idle: 1      # 최소 유지 커넥션 수
+       idle-timeout: 30000  # 놀고 있는 커넥션 해제 시간 (30초)
 
 jwt:
   secret-key: ${JWT_KEY}
